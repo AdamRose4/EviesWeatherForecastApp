@@ -26,16 +26,63 @@
 .confidence.medium { background:rgba(255,212,92,.14); color:#ffe08a; }
 .confidence.low { background:rgba(72,220,139,.14); color:#86efb2; }
 
-/* Keep the 7-day consensus columns aligned with their headings */
+/* 7-day model consensus: one identical grid for headings and every row */
+.daily-header,
+.day-row.consensus-row {
+  display: grid !important;
+  grid-template-columns: minmax(72px,.8fr) minmax(150px,1.35fr) minmax(190px,1.65fr) minmax(120px,1fr) minmax(105px,1fr) !important;
+  column-gap: 18px !important;
+  align-items: center !important;
+}
+
+.daily-header {
+  padding-left: 13px !important;
+  padding-right: 13px !important;
+}
+
 .daily-header > div,
 .day-row.consensus-row > div {
   min-width: 0;
+  width: 100%;
+  text-align: left !important;
+  justify-self: stretch;
 }
-.daily-header > div:nth-child(3),
-.day-row.consensus-row .desc {
+
+.day-row.consensus-row .day,
+.day-row.consensus-row .day-weather,
+.day-row.consensus-row .desc,
+.day-row.consensus-row .daily-confidence {
+  justify-content: flex-start;
+  text-align: left !important;
+}
+
+/* Keep the high and low temperatures in two fixed mini-columns */
+.daily-header > div:nth-child(5) {
+  display: grid;
+  grid-template-columns: 38px 38px;
+  column-gap: 8px;
+  justify-content: start;
+}
+
+.day-row.consensus-row .temps {
+  display: grid !important;
+  grid-template-columns: 38px 38px;
+  column-gap: 8px;
+  justify-content: start;
+  align-items: baseline;
+  text-align: left !important;
+  font-variant-numeric: tabular-nums;
+}
+
+.day-row.consensus-row .temps span {
+  margin-left: 0 !important;
   text-align: left;
-  padding-left: 0;
 }
-.day-row.consensus-row {
-  align-items: center;
+
+@media (max-width: 780px) {
+  /* Keep the compact mobile layout already used by the app. */
+  .day-row.consensus-row {
+    grid-template-columns: 1fr 1fr !important;
+    column-gap: 8px !important;
+  }
 }
