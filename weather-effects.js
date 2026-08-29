@@ -1,4 +1,4 @@
-// Dynamic hero animation based on the current Open-Meteo weather code.
+// Dynamic hero animation based on the same six-model consensus used by the "Now" tile.
 (function () {
   function weatherType(code) {
     if ([95,96,99].includes(code)) return 'storm';
@@ -33,10 +33,24 @@
   }
 
   function getAppState() {
+    try { return typeof state !== 'undefined' ? state : null; }
+    catch (_) { return null; }
+  }
+
+  function consensusWeatherCode(appState) {
     try {
-      return typeof state !== 'undefined' ? state : null;
+      if (typeof consensusAt !== 'function' || !appState?.data?.hourly?.time?.length) {
+        return Number(appState?.data?.current?.weather_code ?? 2);
+      }
+      const now = new Date();
+      let idx = appState.data.hourly.time.findIndex(t =>
+        new Date(t) >= new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours())
+      );
+      if (idx < 0) idx = 0;
+      const c = consensusAt(appState.data.hourly.time[idx]);
+      return Number(c?.code ?? appState.data.current.weather_code ?? 2);
     } catch (_) {
-      return null;
+      return Number(appState?.data?.current?.weather_code ?? 2);
     }
   }
 
@@ -48,7 +62,7 @@
     const scene = document.getElementById('weatherScene');
     if (!card || !scene) return;
 
-    const code = Number(appState.data.current.weather_code);
+    const code = consensusWeatherCode(appState);
     const type = weatherType(code);
     const night = isNight();
 
@@ -58,7 +72,7 @@
 
     let html = '';
     if (night) html += `<div class="moon-disc"></div>${stars()}`;
-    else if (type === 'clear' || type === 'cloudy' || type === 'rain') html += `<div class="sun-disc"></div>`;
+    else if (type === 'clear' || type === 'cloudy') html += `<div class="sun-disc"></div>`;
 
     if (type === 'cloudy' || type === 'rain' || type === 'snow' || type === 'storm') {
       html += `<div class="scene-cloud back"></div><div class="scene-cloud front"></div>`;
@@ -89,8 +103,6 @@
     if (appState?.data?.current) {
       applyHeroWeather();
       clearInterval(starter);
-    } else if (tries >= 40) {
-      clearInterval(starter);
-    }
+    } else if (tries >= 40) clearInterval(starter);
   }, 250);
 })();
