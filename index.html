@@ -98,11 +98,11 @@
         <section class="section-card glass accuracy-section">
           <div class="section-heading">
             <div><span class="kicker">SOURCE INDEX</span><h3>Forecast sources & recent accuracy</h3></div>
-            <span id="accuracyWindow" class="muted">Six-source index</span>
+            <span id="accuracyWindow" class="muted">14-day local back-test</span>
           </div>
-          <p class="accuracy-intro">Accuracy is location-specific. This index identifies the six model sources used in the consensus and shows whether each source is currently contributing data.</p>
+          <p class="accuracy-intro">Each model is back-tested locally using its archived 24-hour-ahead forecasts. The score combines temperature accuracy and correct rain/dry-day calls over the previous 14 complete days.</p>
           <div id="accuracyIndex" class="accuracy-index"></div>
-          <p id="accuracyNote" class="explain">Scores are an independent Weather Consensus index, not an official accuracy percentage published by the providers. Lower temperature error and correct rain/dry calls produce a higher score.</p>
+          <p id="accuracyNote" class="explain">Calculating local forecast accuracy…</p>
         </section>
       </section>
     </main>
@@ -111,5 +111,6 @@
   </div>
   <script src="app.js"></script>
   <script src="hourly-overrides.js"></script>
+  <script src="accuracy-backtest.js"></script>
 </body>
 </html>
