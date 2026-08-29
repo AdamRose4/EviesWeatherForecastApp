@@ -29,12 +29,24 @@
 /* Hero summary row: five equal cards, with rain likelihood included */
 .hero-stats-grid {
   grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
-  gap: 10px;
+  gap: 10px !important;
   margin-top: 18px !important;
 }
 .hero-stats-grid .stat {
-  width: 100%;
+  width: 100% !important;
+  min-width: 0 !important;
+  padding: 13px 12px !important;
+}
+.hero-stats-grid .stat > div {
   min-width: 0;
+}
+.hero-stats-grid .stat small {
+  white-space: nowrap !important;
+  font-size: 11px !important;
+  line-height: 1.15;
+}
+.hero-stats-grid .stat strong:not(.confidence) {
+  white-space: nowrap !important;
 }
 .likelihood-stat .confidence {
   margin-top: 0;
@@ -44,24 +56,6 @@
 }
 .hero-card .hero-main {
   min-height: 185px;
-}
-
-/* Keep the animated weather scene as the only top-right weather artwork */
-.hero-card .weather-scene .scene-cloud {
-  right: 5%;
-  top: 13%;
-  font-size: clamp(72px, 9vw, 126px);
-}
-.hero-card .weather-scene .scene-cloud.back {
-  right: 14%;
-  top: 10%;
-  opacity: .20;
-}
-.hero-card .weather-scene .sun-disc {
-  right: 8%;
-  top: 9%;
-  width: 96px;
-  height: 96px;
 }
 
 /* 7-day model consensus: one identical grid for headings and every row */
@@ -94,7 +88,6 @@
   text-align: left !important;
 }
 
-/* Keep the high and low temperatures in two fixed mini-columns */
 .daily-header > div:nth-child(5) {
   display: grid;
   grid-template-columns: 38px 38px;
@@ -117,18 +110,11 @@
   text-align: left;
 }
 
-@media (max-width: 900px) {
-  .hero-stats-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-  }
-}
-
-@media (max-width: 780px) {
+@media (max-width: 760px) {
   .hero-stats-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
   }
 
-  /* Keep the compact mobile layout already used by the app. */
   .day-row.consensus-row {
     grid-template-columns: 1fr 1fr !important;
     column-gap: 8px !important;
