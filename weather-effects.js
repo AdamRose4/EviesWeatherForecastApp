@@ -46,7 +46,6 @@
 
     const card = document.querySelector('.hero-card');
     const scene = document.getElementById('weatherScene');
-    const icon = document.getElementById('weatherIcon');
     if (!card || !scene) return;
 
     const code = Number(appState.data.current.weather_code);
@@ -62,24 +61,17 @@
     else if (type === 'clear' || type === 'cloudy' || type === 'rain') html += `<div class="sun-disc"></div>`;
 
     if (type === 'cloudy' || type === 'rain' || type === 'snow' || type === 'storm') {
-      html += `<div class="scene-cloud back">☁️</div><div class="scene-cloud">${type === 'storm' ? '🌩️' : '☁️'}</div>`;
+      html += `<div class="scene-cloud back"></div><div class="scene-cloud front"></div>`;
     }
     if (type === 'rain') html += drops(26,'rain-drop');
     if (type === 'storm') html += drops(32,'rain-drop') + `<div class="lightning"></div>`;
     if (type === 'snow') html += drops(24,'snow-flake','❄');
     if (type === 'fog') html += `<div class="fog-bank" style="top:22%"></div><div class="fog-bank" style="top:37%;animation-delay:-4s"></div><div class="fog-bank" style="top:52%;animation-delay:-7s"></div>`;
-    if (type === 'clear' && !night) html += `<div class="scene-cloud back">☁️</div>`;
+    if (type === 'clear' && !night) html += `<div class="scene-cloud back"></div>`;
 
     scene.innerHTML = html;
-    if (icon) {
-      icon.style.animation = (type === 'rain' || type === 'cloudy' || type === 'storm')
-        ? 'cloudFloat 6s ease-in-out infinite'
-        : 'none';
-    }
   }
 
-  // render() is a global function from app.js. Wrap it so each weather refresh
-  // also refreshes the animated scene.
   const originalRender = typeof render === 'function' ? render : null;
   if (originalRender) {
     window.render = function () {
@@ -90,8 +82,6 @@
 
   window.applyHeroWeather = applyHeroWeather;
 
-  // app.js starts its first fetch before this file loads. Poll briefly so the
-  // animation also appears on that first load even if render finished early.
   let tries = 0;
   const starter = setInterval(() => {
     tries += 1;
