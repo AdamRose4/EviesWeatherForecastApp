@@ -32,16 +32,27 @@
     }).join('');
   }
 
+  function getAppState() {
+    try {
+      return typeof state !== 'undefined' ? state : null;
+    } catch (_) {
+      return null;
+    }
+  }
+
   function applyHeroWeather() {
-    if (!window.state?.data?.current) return;
+    const appState = getAppState();
+    if (!appState?.data?.current) return;
+
     const card = document.querySelector('.hero-card');
     const scene = document.getElementById('weatherScene');
     const icon = document.getElementById('weatherIcon');
     if (!card || !scene) return;
 
-    const code = Number(state.data.current.weather_code);
+    const code = Number(appState.data.current.weather_code);
     const type = weatherType(code);
     const night = isNight();
+
     card.classList.remove('weather-clear','weather-cloudy','weather-rain','weather-snow','weather-fog','weather-storm','weather-night');
     card.classList.add(`weather-${type}`);
     if (night) card.classList.add('weather-night');
@@ -60,11 +71,17 @@
     if (type === 'clear' && !night) html += `<div class="scene-cloud back">☁️</div>`;
 
     scene.innerHTML = html;
-    if (icon) icon.style.animation = (type === 'rain' || type === 'cloudy') ? 'cloudFloat 6s ease-in-out infinite' : 'none';
+    if (icon) {
+      icon.style.animation = (type === 'rain' || type === 'cloudy' || type === 'storm')
+        ? 'cloudFloat 6s ease-in-out infinite'
+        : 'none';
+    }
   }
 
-  const originalRender = window.render;
-  if (typeof originalRender === 'function') {
+  // render() is a global function from app.js. Wrap it so each weather refresh
+  // also refreshes the animated scene.
+  const originalRender = typeof render === 'function' ? render : null;
+  if (originalRender) {
     window.render = function () {
       originalRender.apply(this, arguments);
       applyHeroWeather();
@@ -72,5 +89,18 @@
   }
 
   window.applyHeroWeather = applyHeroWeather;
-  if (window.state?.data) applyHeroWeather();
+
+  // app.js starts its first fetch before this file loads. Poll briefly so the
+  // animation also appears on that first load even if render finished early.
+  let tries = 0;
+  const starter = setInterval(() => {
+    tries += 1;
+    const appState = getAppState();
+    if (appState?.data?.current) {
+      applyHeroWeather();
+      clearInterval(starter);
+    } else if (tries >= 40) {
+      clearInterval(starter);
+    }
+  }, 250);
 })();
