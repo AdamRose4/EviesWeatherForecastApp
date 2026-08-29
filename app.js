@@ -59,7 +59,7 @@ async function fetchBaseWeather(lat, lon) {
   const params = new URLSearchParams({
     latitude: lat, longitude: lon, timezone: 'auto', forecast_days: 8,
     current: 'temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m',
-    hourly: 'temperature_2m,precipitation,weather_code',
+    hourly: 'temperature_2m,precipitation,weather_code,wind_speed_10m,uv_index',
     daily: 'weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,uv_index_max'
   });
   const res = await fetch(`https://api.open-meteo.com/v1/forecast?${params}`);
@@ -167,10 +167,29 @@ function dayConsensus(dateKey) {
   return { rows, available, rainCount, rainPercent:Math.round(100*rainCount/available), high:mean(highs), low:mean(lows), code:codes[Math.floor(codes.length/2)] ?? 2, cls, label };
 }
 
+function baseHourlyAt(timeKey) {
+  const i = state.data?.hourly?.time?.indexOf(timeKey) ?? -1;
+  if (i < 0) return { wind: null, uv: null };
+  return {
+    wind: state.data.hourly.wind_speed_10m?.[i] ?? null,
+    uv: state.data.hourly.uv_index?.[i] ?? null
+  };
+}
+
+function uvLabel(value) {
+  if (!Number.isFinite(value)) return '—';
+  if (value < 3) return `${value.toFixed(1)} Low`;
+  if (value < 6) return `${value.toFixed(1)} Moderate`;
+  if (value < 8) return `${value.toFixed(1)} High`;
+  if (value < 11) return `${value.toFixed(1)} Very high`;
+  return `${value.toFixed(1)} Extreme`;
+}
+
 function renderHourlyCard(timeKey, label) {
   const c = consensusAt(timeKey);
   if (!c) return '';
   const w = weatherCodes[c.code] || ['Weather','🌤️'];
+  const extra = baseHourlyAt(timeKey);
   const availabilityText = c.available === MODEL_DEFS.length ? `${c.rainCount}/${c.available} rain` : `${c.rainCount}/${c.available} available rain`;
   const missingTitle = c.missing.length ? `Missing for this hour: ${c.missing.join(', ')}` : 'All 6 sources contributed';
   return `<div class="hour-card" title="${missingTitle}">
@@ -179,6 +198,8 @@ function renderHourlyCard(timeKey, label) {
     <strong>${temp(c.averageTemp)}</strong>
     <small>${c.rainPercent}% models rain</small>
     <div class="model-vote">${availabilityText}</div>
+    <div class="hour-extra">💨 ${Number.isFinite(extra.wind) ? Math.round(extra.wind) + ' km/h' : '—'}</div>
+    <div class="hour-extra">☀️ UV ${uvLabel(extra.uv)}</div>
     <div class="hour-confidence ${c.cls}"><i class="confidence-dot ${c.cls}"></i>${c.label}</div>
   </div>`;
 }
@@ -277,7 +298,7 @@ function renderSourceIndex() {
       <div class="accuracy-placeholder">Recent local accuracy: <strong>tracking</strong></div>
     </div>`;
   }).join('');
-  $('accuracyNote').textContent = 'All hourly consensus votes above use the six named model sources directly. If a source has no value for a particular hour, the card explicitly says how many models were available instead of showing a misleading total.';
+  $('accuracyNote').textContent = 'All hourly consensus votes above use the six named model sources directly. If a source has no value for a particular hour, the card explicitly says how many models were available instead of showing a misleading 4/4 or 5/5 total.';
 }
 
 $('searchForm').addEventListener('submit', async (e) => {
