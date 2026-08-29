@@ -9,6 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="hourly-overrides.css" />
 </head>
 <body>
   <div class="app-shell">
@@ -68,11 +69,7 @@
             <span id="updatedAt" class="muted"></span>
           </div>
           <div id="hourlyForecast" class="hourly-scroll"></div>
-          <div class="confidence-key" aria-label="Hourly forecast confidence key">
-            <span><i class="confidence-dot high"></i><strong>Green</strong> High rain likelihood (5–6 models)</span>
-            <span><i class="confidence-dot medium"></i><strong>Yellow</strong> Medium rain likelihood (3–4 models)</span>
-            <span><i class="confidence-dot low"></i><strong>Red</strong> Low rain likelihood (0–2 models)</span>
-          </div>
+          <div class="confidence-key" aria-label="Hourly rain likelihood key"></div>
         </section>
 
         <section class="section-card glass">
@@ -81,11 +78,7 @@
             <span id="tomorrowDate" class="muted"></span>
           </div>
           <div id="tomorrowHourlyForecast" class="hourly-scroll"></div>
-          <div class="confidence-key" aria-label="Tomorrow hourly forecast confidence key">
-            <span><i class="confidence-dot high"></i><strong>Green</strong> High rain likelihood (5–6 models)</span>
-            <span><i class="confidence-dot medium"></i><strong>Yellow</strong> Medium rain likelihood (3–4 models)</span>
-            <span><i class="confidence-dot low"></i><strong>Red</strong> Low rain likelihood (0–2 models)</span>
-          </div>
+          <div class="confidence-key" aria-label="Tomorrow hourly rain likelihood key"></div>
         </section>
 
         <section class="section-card glass">
@@ -119,5 +112,6 @@
     <footer>Forecast data via Open-Meteo. Evie&apos;s Weather Forecasting App is independent of the listed forecast organisations.</footer>
   </div>
   <script src="app.js"></script>
+  <script src="hourly-overrides.js"></script>
 </body>
 </html>
