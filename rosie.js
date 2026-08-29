@@ -70,9 +70,9 @@
               <ellipse class="rosie-paw" cx="112" cy="100" rx="8" ry="3.5" fill="#8d4c1f"/>
             </g>
 
-            <!-- FAR EAR: lower-set and always behind the head -->
-            <path class="rosie-ear rosie-ear-back" d="M108 30 C94 30 87 41 89 59 C91 77 99 88 108 81 C114 72 114 45 108 30Z" fill="url(#rosieEar4)"/>
-            <path d="M95 42 C95 58 100 70 106 79" fill="none" stroke="#cf8439" stroke-width="2.5" opacity=".7"/>
+            <!-- FAR EAR: swapped so the visually far ear sits behind the head -->
+            <path class="rosie-ear rosie-ear-back" d="M127 29 C140 29 147 41 144 61 C141 80 132 91 123 83 C117 74 120 43 127 29Z" fill="#a95f25"/>
+            <path d="M137 41 C140 57 135 72 128 81" fill="none" stroke="#cf8238" stroke-width="2.5" opacity=".72"/>
 
             <g class="rosie-head-group">
               <ellipse class="rosie-head" cx="121" cy="46" rx="24" ry="23" fill="url(#rosieCoat4)"/>
@@ -95,9 +95,9 @@
               <circle cx="117" cy="72" r="3.2" fill="#f3cb4f"/>
             </g>
 
-            <!-- NEAR EAR: lower-set and always in front of the head -->
-            <path class="rosie-ear rosie-ear-front" d="M127 29 C140 29 147 41 144 61 C141 80 132 91 123 83 C117 74 120 43 127 29Z" fill="#a95f25"/>
-            <path d="M137 41 C140 57 135 72 128 81" fill="none" stroke="#cf8238" stroke-width="2.5" opacity=".72"/>
+            <!-- NEAR EAR: swapped so the visually near ear sits in front of the head -->
+            <path class="rosie-ear rosie-ear-front" d="M108 30 C94 30 87 41 89 59 C91 77 99 88 108 81 C114 72 114 45 108 30Z" fill="url(#rosieEar4)"/>
+            <path d="M95 42 C95 58 100 70 106 79" fill="none" stroke="#cf8439" stroke-width="2.5" opacity=".7"/>
           </g>
         </g>
       </svg>`;
