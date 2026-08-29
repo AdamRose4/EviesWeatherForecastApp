@@ -1,20 +1,21 @@
-// Rosie: weather-reactive golden cocker spaniel companion for the hero card.
-// She patrols a safe middle area, pauses, sits, looks around, then walks back.
+// Rosie v3: detailed weather-reactive golden cocker spaniel companion.
+// Back ear is drawn behind the head; front ear is drawn in front. Flipping the
+// whole direction group swaps the visible side correctly when Rosie turns.
 (function () {
   const rainyWords = ['rain','drizzle','shower','storm','thunder','sleet','snow'];
   let stepTimer = null;
   let stepIndex = 0;
 
   const patrol = [
-    { pose:'walk', side:'left',  x: 4,  ms: 600 },
-    { pose:'walk', side:'right', x: 66, ms: 3400 },
-    { pose:'stand', side:'right', x: 66, ms: 700 },
-    { pose:'sit', side:'right', x: 66, ms: 2700 },
-    { pose:'stand', side:'right', x: 66, ms: 650 },
-    { pose:'walk', side:'left', x: 8,  ms: 3400 },
-    { pose:'stand', side:'left', x: 8,  ms: 650 },
-    { pose:'sit', side:'left', x: 8,  ms: 2400 },
-    { pose:'stand', side:'left', x: 8,  ms: 650 }
+    { pose:'walk', side:'right', x: 8,  ms: 500 },
+    { pose:'walk', side:'right', x: 58, ms: 2900 },
+    { pose:'stand',side:'right', x: 58, ms: 700 },
+    { pose:'sit',  side:'right', x: 58, ms: 2600 },
+    { pose:'stand',side:'right', x: 58, ms: 650 },
+    { pose:'walk', side:'left',  x: 10, ms: 2900 },
+    { pose:'stand',side:'left',  x: 10, ms: 700 },
+    { pose:'sit',  side:'left',  x: 10, ms: 2300 },
+    { pose:'stand',side:'left',  x: 10, ms: 650 }
   ];
 
   function moodFromCondition() {
@@ -24,70 +25,80 @@
 
   function rosieSvg() {
     return `
-      <svg viewBox="0 0 132 94" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <svg viewBox="0 0 160 104" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
         <defs>
-          <linearGradient id="rosieCoat" x1="0" x2="1" y1="0" y2="1">
-            <stop offset="0" stop-color="#efbd72"/>
-            <stop offset=".55" stop-color="#d89a4d"/>
-            <stop offset="1" stop-color="#bd7932"/>
+          <linearGradient id="rosieCoat3" x1="0" x2="1" y1="0" y2="1">
+            <stop offset="0" stop-color="#f1bf73"/>
+            <stop offset=".55" stop-color="#d99343"/>
+            <stop offset="1" stop-color="#b86f2c"/>
           </linearGradient>
-          <linearGradient id="rosieEar" x1="0" x2="1">
-            <stop offset="0" stop-color="#b8702c"/>
-            <stop offset="1" stop-color="#8f5425"/>
+          <linearGradient id="rosieEar3" x1="0" x2="1">
+            <stop offset="0" stop-color="#b56a29"/>
+            <stop offset="1" stop-color="#8f4f20"/>
           </linearGradient>
         </defs>
 
-        <g class="rosie-dog">
-          <ellipse class="rosie-shadow" cx="63" cy="83" rx="40" ry="5" fill="rgba(0,0,0,.18)"/>
+        <g class="rosie-direction">
+          <g class="rosie-dog">
+            <ellipse class="rosie-shadow" cx="77" cy="92" rx="50" ry="5" fill="rgba(0,0,0,.18)"/>
 
-          <g class="rosie-tail-group">
-            <path class="rosie-tail" d="M29 51 C15 49 8 39 16 29 C19 25 24 26 25 31 C19 36 20 42 31 44" fill="none" stroke="url(#rosieCoat)" stroke-width="9" stroke-linecap="round"/>
-            <path d="M18 31 C13 26 14 22 18 19" fill="none" stroke="#e8ad62" stroke-width="3" stroke-linecap="round" opacity=".65"/>
-          </g>
-
-          <g class="rosie-body-group">
-            <ellipse class="rosie-body" cx="59" cy="53" rx="34" ry="22" fill="url(#rosieCoat)"/>
-            <path d="M34 47 C42 35 68 32 82 44" fill="none" stroke="#f2c681" stroke-width="3" stroke-linecap="round" opacity=".55"/>
-            <ellipse class="rosie-chest" cx="77" cy="58" rx="13" ry="16" fill="#f0d2a6" opacity=".95"/>
-            <path d="M68 48 C73 53 77 57 80 67" fill="none" stroke="#fff0d1" stroke-width="3" stroke-linecap="round" opacity=".55"/>
-          </g>
-
-          <g class="rosie-hind-leg-group">
-            <path class="rosie-hind-leg" d="M38 65 C36 72 35 78 37 84 L46 84 C46 76 47 69 51 64" fill="#bd7932"/>
-            <ellipse class="rosie-paw" cx="41" cy="84" rx="7" ry="3.5" fill="#9b5d2a"/>
-          </g>
-
-          <g class="rosie-front-legs">
-            <path class="rosie-leg rosie-leg-a" d="M72 66 L72 84 L81 84 L82 64" fill="#c98136"/>
-            <ellipse class="rosie-paw" cx="76.5" cy="84" rx="7" ry="3.5" fill="#9b5d2a"/>
-            <path class="rosie-leg rosie-leg-b" d="M86 63 L87 84 L96 84 L95 61" fill="#bd7932"/>
-            <ellipse class="rosie-paw" cx="91.5" cy="84" rx="7" ry="3.5" fill="#915426"/>
-          </g>
-
-          <g class="rosie-head-group">
-            <circle class="rosie-head" cx="91" cy="36" r="21" fill="url(#rosieCoat)"/>
-            <ellipse class="rosie-muzzle" cx="105" cy="43" rx="14" ry="10" fill="#e7bc82"/>
-
-            <path class="rosie-ear rosie-ear-back" d="M81 20 C70 19 64 26 66 41 C68 55 75 62 81 56 C85 50 84 31 81 20Z" fill="url(#rosieEar)"/>
-            <path class="rosie-ear rosie-ear-front" d="M97 18 C105 16 111 24 109 38 C107 52 101 58 96 53 C92 47 93 27 97 18Z" fill="#a96228"/>
-            <path d="M70 30 C70 43 73 50 78 55" fill="none" stroke="#d18a3f" stroke-width="2.5" opacity=".75"/>
-            <path d="M104 27 C106 37 104 46 100 52" fill="none" stroke="#ca7c35" stroke-width="2.5" opacity=".7"/>
-
-            <g class="rosie-face">
-              <ellipse class="rosie-eye rosie-eye-left" cx="87" cy="34" rx="2.4" ry="3" fill="#2c211b"/>
-              <ellipse class="rosie-eye rosie-eye-right" cx="96" cy="34" rx="2.4" ry="3" fill="#2c211b"/>
-              <circle cx="86.3" cy="33" r=".8" fill="#fff" opacity=".8"/>
-              <circle cx="95.3" cy="33" r=".8" fill="#fff" opacity=".8"/>
-              <path class="rosie-brow rosie-brow-left" d="M83 29 Q87 27 90 29" fill="none" stroke="#805026" stroke-width="1.5" stroke-linecap="round"/>
-              <path class="rosie-brow rosie-brow-right" d="M93 29 Q97 27 100 29" fill="none" stroke="#805026" stroke-width="1.5" stroke-linecap="round"/>
-              <ellipse class="rosie-nose" cx="112" cy="42" rx="4" ry="3.2" fill="#33251e"/>
-              <path class="rosie-mouth-happy" d="M103 47 Q108 52 113 47" fill="none" stroke="#573a27" stroke-width="2" stroke-linecap="round"/>
-              <path class="rosie-mouth-sad" d="M103 50 Q108 45 113 50" fill="none" stroke="#573a27" stroke-width="2" stroke-linecap="round"/>
-              <path class="rosie-tongue" d="M107 50 Q110 57 113 50" fill="#d77a78" opacity=".95"/>
+            <g class="rosie-tail-group">
+              <path class="rosie-tail" d="M34 59 C15 57 8 44 17 31 C22 24 31 25 32 33 C25 39 25 47 39 51" fill="none" stroke="url(#rosieCoat3)" stroke-width="10" stroke-linecap="round"/>
+              <path d="M20 32 C15 27 16 22 21 18" fill="none" stroke="#efb76b" stroke-width="3" stroke-linecap="round" opacity=".7"/>
+              <path d="M24 34 C19 31 19 27 22 24" fill="none" stroke="#f3ca8a" stroke-width="2" stroke-linecap="round" opacity=".7"/>
             </g>
 
-            <path class="rosie-collar" d="M76 51 Q88 59 99 54" fill="none" stroke="#4ba6c8" stroke-width="3.5" stroke-linecap="round"/>
-            <circle cx="88" cy="57" r="3" fill="#f4cd50"/>
+            <!-- FAR EAR: intentionally before the head so it stays behind it -->
+            <path class="rosie-ear rosie-ear-back" d="M101 27 C88 22 80 31 81 48 C82 64 89 75 98 70 C105 64 106 39 101 27Z" fill="url(#rosieEar3)"/>
+            <path d="M87 39 C87 53 91 62 97 69" fill="none" stroke="#cd8337" stroke-width="2.5" opacity=".75"/>
+
+            <g class="rosie-body-group">
+              <ellipse class="rosie-body" cx="69" cy="61" rx="39" ry="22" fill="url(#rosieCoat3)"/>
+              <path d="M39 55 C50 40 78 38 93 50" fill="none" stroke="#f5ca86" stroke-width="3" stroke-linecap="round" opacity=".55"/>
+              <path d="M39 66 C47 75 58 79 70 78" fill="none" stroke="#c57930" stroke-width="2.5" opacity=".45"/>
+              <ellipse class="rosie-chest" cx="91" cy="65" rx="14" ry="18" fill="#f0d0a3"/>
+              <path d="M82 55 C89 61 94 67 96 78" fill="none" stroke="#fff0d2" stroke-width="3" opacity=".55"/>
+              <path d="M51 75 Q58 82 63 76 Q69 83 74 76 Q80 82 85 75" fill="none" stroke="#e5ad62" stroke-width="2.3" stroke-linecap="round" opacity=".7"/>
+            </g>
+
+            <g class="rosie-hind-leg-group">
+              <path class="rosie-hind-leg" d="M46 73 C43 80 43 87 45 92 L56 92 C56 83 58 76 62 70" fill="#b86f2c"/>
+              <path d="M44 79 Q49 83 55 79" fill="none" stroke="#e2a65a" stroke-width="2" opacity=".6"/>
+              <ellipse class="rosie-paw" cx="50" cy="92" rx="8" ry="3.5" fill="#915020"/>
+            </g>
+
+            <g class="rosie-front-legs">
+              <path class="rosie-leg rosie-leg-a" d="M85 72 L85 92 L95 92 L96 69" fill="#c47b31"/>
+              <ellipse class="rosie-paw" cx="90" cy="92" rx="8" ry="3.5" fill="#955221"/>
+              <path class="rosie-leg rosie-leg-b" d="M101 69 L102 92 L112 92 L111 66" fill="#b86f2c"/>
+              <ellipse class="rosie-paw" cx="107" cy="92" rx="8" ry="3.5" fill="#8d4c1f"/>
+            </g>
+
+            <g class="rosie-head-group">
+              <circle class="rosie-head" cx="112" cy="41" r="23" fill="url(#rosieCoat3)"/>
+              <ellipse class="rosie-muzzle" cx="129" cy="49" rx="15" ry="10.5" fill="#e8bb7f"/>
+              <path d="M104 26 C112 22 121 24 127 30" fill="none" stroke="#f4c883" stroke-width="3" stroke-linecap="round" opacity=".5"/>
+
+              <g class="rosie-face">
+                <ellipse class="rosie-eye rosie-eye-left" cx="107" cy="39" rx="2.5" ry="3.2" fill="#2c211b"/>
+                <ellipse class="rosie-eye rosie-eye-right" cx="117" cy="39" rx="2.5" ry="3.2" fill="#2c211b"/>
+                <circle cx="106.3" cy="38" r=".8" fill="#fff" opacity=".85"/>
+                <circle cx="116.3" cy="38" r=".8" fill="#fff" opacity=".85"/>
+                <path class="rosie-brow rosie-brow-left" d="M102 34 Q107 31 111 34" fill="none" stroke="#7e4922" stroke-width="1.7" stroke-linecap="round"/>
+                <path class="rosie-brow rosie-brow-right" d="M113 34 Q118 31 122 34" fill="none" stroke="#7e4922" stroke-width="1.7" stroke-linecap="round"/>
+                <ellipse class="rosie-nose" cx="137" cy="48" rx="4.4" ry="3.5" fill="#30221b"/>
+                <path class="rosie-mouth-happy" d="M126 54 Q132 60 138 54" fill="none" stroke="#563722" stroke-width="2" stroke-linecap="round"/>
+                <path class="rosie-mouth-sad" d="M126 58 Q132 52 138 58" fill="none" stroke="#563722" stroke-width="2" stroke-linecap="round"/>
+                <path class="rosie-tongue" d="M130 57 Q134 65 138 57" fill="#d97978"/>
+              </g>
+
+              <path class="rosie-collar" d="M95 58 Q109 67 123 60" fill="none" stroke="#4ba6c8" stroke-width="3.5" stroke-linecap="round"/>
+              <circle cx="108" cy="65" r="3.2" fill="#f3cb4f"/>
+            </g>
+
+            <!-- NEAR EAR: deliberately after the head so it sits in front -->
+            <path class="rosie-ear rosie-ear-front" d="M118 24 C129 21 136 31 134 48 C132 66 124 77 116 70 C110 63 112 37 118 24Z" fill="#a95f25"/>
+            <path d="M127 34 C130 48 126 61 120 69" fill="none" stroke="#cf8238" stroke-width="2.5" opacity=".75"/>
           </g>
         </g>
       </svg>`;
