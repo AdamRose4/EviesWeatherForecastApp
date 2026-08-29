@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
-  <link rel="stylesheet" href="hourly-overrides.css?v=20260829-6" />
+  <link rel="stylesheet" href="hourly-overrides.css?v=20260829-5" />
   <link rel="stylesheet" href="weather-effects.css?v=20260829-4" />
 </head>
 <body>
@@ -17,29 +17,18 @@
     <header class="topbar">
       <div class="brand">
         <div class="brand-mark">☀</div>
-        <div><h1 id="appTitle">Evie&apos;s Weather Forecasting App</h1><p id="appTagline">Six weather models. One clearer forecast.</p></div>
+        <div><h1>Evie&apos;s Weather Forecasting App</h1><p>Six weather models. One clearer forecast.</p></div>
       </div>
-      <div class="top-actions">
-        <button id="langBtn" class="unit-btn lang-btn" aria-label="Switch language">SK</button>
-        <button id="unitBtn" class="unit-btn" aria-label="Toggle temperature unit">°C</button>
-      </div>
+      <button id="unitBtn" class="unit-btn" aria-label="Toggle temperature unit">°C</button>
     </header>
 
     <main>
       <section class="search-panel glass">
         <form id="searchForm" class="search-form">
           <input id="searchInput" autocomplete="off" placeholder="Search town, city or postcode…" aria-label="Search location" />
-          <button id="searchBtn" type="submit">Search</button>
+          <button type="submit">Search</button>
         </form>
-        <div class="location-tools">
-          <button id="locationBtn" class="location-btn">⌖ Use my location</button>
-          <button id="addFavouriteBtn" class="favourite-add-btn">＋ Add current location</button>
-        </div>
-        <div id="favouritesRow" class="favourites-row">
-          <span id="favouritesLabel" class="favourites-label">★ Favourites</span>
-          <div id="favouritesList" class="favourites-list"></div>
-          <span id="favouritesEmpty" class="favourites-empty">No favourites yet</span>
-        </div>
+        <button id="locationBtn" class="location-btn">⌖ Use my location</button>
         <div id="searchResults" class="search-results hidden"></div>
       </section>
 
@@ -120,8 +109,7 @@
   <script src="hourly-overrides.js"></script>
   <script src="accuracy-backtest.js"></script>
   <script src="weather-effects.js?v=20260829-4"></script>
-  <script src="wind-labels.js?v=20260829-5"></script>
-  <script src="ui-features.js?v=20260829-1"></script>
+  <script src="wind-labels.js?v=20260829-4"></script>
   <script src="auto-refresh.js"></script>
 </body>
 </html>
