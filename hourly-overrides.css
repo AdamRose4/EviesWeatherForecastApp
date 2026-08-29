@@ -29,6 +29,75 @@
 .confidence.medium { background:rgba(255,212,92,.14); color:#ffe08a; }
 .confidence.low { background:rgba(72,220,139,.14); color:#86efb2; }
 
+/* Predictive search dropdown */
+.search-panel { position:relative; }
+.search-results.predictive-results {
+  position:absolute;
+  left:18px;
+  right:18px;
+  top:72px;
+  z-index:50;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:14px;
+  overflow:hidden;
+  background:#122338;
+  box-shadow:0 18px 45px rgba(0,0,0,.28);
+  max-height:290px;
+  overflow-y:auto;
+}
+.search-results.predictive-results .result-item {
+  width:100%;
+  display:block;
+  text-align:left;
+  padding:11px 14px;
+  border:0;
+  border-bottom:1px solid rgba(255,255,255,.06);
+  border-radius:0;
+  background:transparent;
+  color:#eaf7ff;
+}
+.search-results.predictive-results .result-item:last-child { border-bottom:0; }
+.search-results.predictive-results .result-item:hover,
+.search-results.predictive-results .result-item.active { background:rgba(94,199,255,.10); }
+.search-results.predictive-results .result-item strong { color:#fff; }
+.search-results.predictive-results .result-item span { font-size:11px; }
+
+/* Location actions and favourites: text links, not grey buttons */
+.location-links {
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:10px 16px;
+  margin-top:10px;
+}
+.location-links .location-btn,
+.location-links .favourite-action,
+.location-links .favourite-location {
+  appearance:none;
+  border:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+  padding:0 !important;
+  margin:0 !important;
+  color:var(--accent2) !important;
+  font:inherit;
+  font-weight:700;
+  cursor:pointer;
+  white-space:nowrap;
+}
+.location-links .location-btn:hover,
+.location-links .favourite-action:hover,
+.location-links .favourite-location:hover { color:#b9efff !important; }
+.favourites-list-inline { display:flex; align-items:center; flex-wrap:wrap; gap:8px 12px; }
+.favourite-location { display:inline-flex !important; align-items:center; gap:5px; }
+.favourite-location .remove-favourite {
+  color:#86a9bd;
+  font-size:13px;
+  line-height:1;
+  padding-left:2px;
+}
+.favourite-location:hover .remove-favourite { color:#ffaaaa; }
+
 /* Hero summary row: five equal cards, with rain likelihood included */
 .hero-stats-grid {
   grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
@@ -122,4 +191,6 @@
     grid-template-columns: 1fr 1fr !important;
     column-gap: 8px !important;
   }
+
+  .search-results.predictive-results { top:72px; }
 }
