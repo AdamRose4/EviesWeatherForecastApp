@@ -1,0 +1,35 @@
+/* Animated current-weather hero scene */
+.hero-card { isolation:isolate; transition:background .8s ease, box-shadow .8s ease; }
+.hero-card .weather-scene { position:absolute; inset:0; overflow:hidden; pointer-events:none; z-index:0; opacity:.95; }
+.hero-card .hero-main,.hero-card .confidence-strip,.hero-card .stats-grid { position:relative; z-index:2; }
+.hero-card::after { z-index:1; }
+
+.weather-scene .scene-cloud { position:absolute; right:4%; top:11%; font-size:clamp(78px,11vw,142px); filter:drop-shadow(0 18px 24px rgba(0,0,0,.22)); animation:cloudFloat 6s ease-in-out infinite; }
+.weather-scene .scene-cloud.back { right:16%; top:7%; opacity:.28; transform:scale(.72); animation-duration:10s; animation-direction:alternate-reverse; }
+.weather-scene .sun-disc { position:absolute; right:9%; top:10%; width:112px; height:112px; border-radius:50%; background:radial-gradient(circle at 35% 35%,#fff6ae 0 9%,#ffd453 28%,#ff9f28 63%,rgba(255,159,40,.15) 72%,transparent 74%); box-shadow:0 0 45px rgba(255,196,70,.36); animation:sunPulse 4s ease-in-out infinite; }
+.weather-scene .moon-disc { position:absolute; right:10%; top:9%; width:92px; height:92px; border-radius:50%; background:radial-gradient(circle at 34% 30%,#fff 0 5%,#e9efff 42%,#bcc8e8 100%); box-shadow:0 0 35px rgba(210,225,255,.28); }
+.weather-scene .star { position:absolute; width:3px; height:3px; border-radius:50%; background:#fff; opacity:.65; animation:twinkle 2.6s ease-in-out infinite; }
+.weather-scene .rain-drop { position:absolute; top:-16%; width:2px; height:28px; border-radius:2px; background:linear-gradient(to bottom,rgba(123,202,255,0),rgba(123,202,255,.9)); transform:rotate(11deg); animation:rainFall linear infinite; }
+.weather-scene .snow-flake { position:absolute; top:-8%; color:rgba(255,255,255,.9); font-size:14px; animation:snowFall linear infinite; }
+.weather-scene .fog-bank { position:absolute; left:-12%; width:125%; height:42px; border-radius:999px; background:linear-gradient(90deg,transparent,rgba(225,239,250,.16),rgba(225,239,250,.3),rgba(225,239,250,.12),transparent); filter:blur(8px); animation:fogDrift 12s ease-in-out infinite alternate; }
+.weather-scene .lightning { position:absolute; inset:0; background:rgba(220,235,255,.15); opacity:0; animation:lightningFlash 7s steps(1,end) infinite; }
+
+.hero-card.weather-clear { background:linear-gradient(135deg,rgba(37,112,160,.43),rgba(73,79,145,.30)),var(--panel); }
+.hero-card.weather-cloudy { background:linear-gradient(135deg,rgba(55,83,106,.38),rgba(61,66,116,.28)),var(--panel); }
+.hero-card.weather-rain { background:linear-gradient(135deg,rgba(29,67,95,.55),rgba(43,51,99,.38)),var(--panel); box-shadow:0 18px 60px rgba(0,0,0,.23),inset 0 0 90px rgba(80,165,220,.05); }
+.hero-card.weather-snow { background:linear-gradient(135deg,rgba(75,107,132,.40),rgba(79,83,126,.28)),var(--panel); }
+.hero-card.weather-fog { background:linear-gradient(135deg,rgba(75,98,112,.42),rgba(61,70,94,.32)),var(--panel); }
+.hero-card.weather-storm { background:linear-gradient(135deg,rgba(28,42,70,.64),rgba(44,35,78,.50)),var(--panel); }
+.hero-card.weather-night { background:linear-gradient(135deg,rgba(14,35,66,.74),rgba(31,33,79,.64)),var(--panel); }
+
+@keyframes cloudFloat { 0%,100%{transform:translate3d(0,0,0)} 50%{transform:translate3d(-12px,7px,0)} }
+@keyframes sunPulse { 0%,100%{transform:scale(1);filter:brightness(1)} 50%{transform:scale(1.055);filter:brightness(1.08)} }
+@keyframes twinkle { 0%,100%{opacity:.25;transform:scale(.75)} 50%{opacity:.9;transform:scale(1.35)} }
+@keyframes rainFall { 0%{transform:translate3d(0,-20px,0) rotate(11deg);opacity:0} 12%{opacity:1} 100%{transform:translate3d(-80px,560px,0) rotate(11deg);opacity:.25} }
+@keyframes snowFall { 0%{transform:translate3d(0,-20px,0) rotate(0deg);opacity:0} 12%{opacity:.9} 100%{transform:translate3d(45px,560px,0) rotate(300deg);opacity:.18} }
+@keyframes fogDrift { from{transform:translateX(-2%)} to{transform:translateX(7%)} }
+@keyframes lightningFlash { 0%,89%,92%,100%{opacity:0} 90%{opacity:.38} 91%{opacity:.08} 93%{opacity:.24} 94%{opacity:0} }
+
+@media (prefers-reduced-motion: reduce) {
+  .weather-scene * { animation:none !important; }
+}
