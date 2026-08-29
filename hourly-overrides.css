@@ -26,6 +26,44 @@
 .confidence.medium { background:rgba(255,212,92,.14); color:#ffe08a; }
 .confidence.low { background:rgba(72,220,139,.14); color:#86efb2; }
 
+/* Hero summary row: five equal cards, with rain likelihood included */
+.hero-stats-grid {
+  grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+  gap: 10px;
+  margin-top: 18px !important;
+}
+.hero-stats-grid .stat {
+  width: 100%;
+  min-width: 0;
+}
+.likelihood-stat .confidence {
+  margin-top: 0;
+}
+.hero-static-icon {
+  display: none !important;
+}
+.hero-card .hero-main {
+  min-height: 185px;
+}
+
+/* Keep the animated weather scene as the only top-right weather artwork */
+.hero-card .weather-scene .scene-cloud {
+  right: 5%;
+  top: 13%;
+  font-size: clamp(72px, 9vw, 126px);
+}
+.hero-card .weather-scene .scene-cloud.back {
+  right: 14%;
+  top: 10%;
+  opacity: .20;
+}
+.hero-card .weather-scene .sun-disc {
+  right: 8%;
+  top: 9%;
+  width: 96px;
+  height: 96px;
+}
+
 /* 7-day model consensus: one identical grid for headings and every row */
 .daily-header,
 .day-row.consensus-row {
@@ -79,7 +117,17 @@
   text-align: left;
 }
 
+@media (max-width: 900px) {
+  .hero-stats-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+}
+
 @media (max-width: 780px) {
+  .hero-stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
   /* Keep the compact mobile layout already used by the app. */
   .day-row.consensus-row {
     grid-template-columns: 1fr 1fr !important;
