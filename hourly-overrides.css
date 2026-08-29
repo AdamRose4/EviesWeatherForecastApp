@@ -20,3 +20,17 @@
 .confidence.high { background:rgba(255,114,114,.14); color:#ff9d9d; }
 .confidence.medium { background:rgba(255,212,92,.14); color:#ffe08a; }
 .confidence.low { background:rgba(72,220,139,.14); color:#86efb2; }
+
+/* Keep the 7-day consensus columns aligned with their headings */
+.daily-header > div,
+.day-row.consensus-row > div {
+  min-width: 0;
+}
+.daily-header > div:nth-child(3),
+.day-row.consensus-row .desc {
+  text-align: left;
+  padding-left: 0;
+}
+.day-row.consensus-row {
+  align-items: center;
+}
