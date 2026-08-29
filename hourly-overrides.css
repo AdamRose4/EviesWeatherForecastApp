@@ -187,6 +187,10 @@
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
   }
 
+  .daily-header {
+    display: none !important;
+  }
+
   .day-row.consensus-row {
     grid-template-columns: 1fr 1fr !important;
     column-gap: 8px !important;
