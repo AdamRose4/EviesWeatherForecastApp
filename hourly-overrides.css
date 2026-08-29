@@ -29,61 +29,6 @@
 .confidence.medium { background:rgba(255,212,92,.14); color:#ffe08a; }
 .confidence.low { background:rgba(72,220,139,.14); color:#86efb2; }
 
-/* Top controls */
-.top-actions { display:flex; align-items:center; gap:8px; }
-.lang-btn { font-size:12px; letter-spacing:.04em; }
-
-/* Location favourites */
-.location-tools { display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin-top:8px; }
-.location-tools .location-btn { margin-top:0 !important; }
-.favourite-add-btn {
-  border:1px solid rgba(255,255,255,.12);
-  border-radius:12px;
-  padding:9px 12px;
-  background:rgba(255,255,255,.05);
-  color:var(--accent2);
-  font-weight:700;
-}
-.favourite-add-btn:hover { background:rgba(255,255,255,.09); }
-.favourites-row {
-  display:flex;
-  align-items:center;
-  gap:8px;
-  margin-top:10px;
-  min-height:34px;
-  overflow-x:auto;
-  padding-bottom:2px;
-}
-.favourites-label { color:var(--muted); font-size:11px; font-weight:700; white-space:nowrap; }
-.favourites-empty { color:#7f96a8; font-size:11px; white-space:nowrap; }
-.favourites-list { display:flex; gap:7px; align-items:center; flex-wrap:nowrap; }
-.favourite-chip {
-  display:inline-flex;
-  align-items:center;
-  gap:7px;
-  border:1px solid rgba(94,199,255,.22);
-  border-radius:999px;
-  padding:7px 8px 7px 11px;
-  background:rgba(94,199,255,.08);
-  color:#dff5ff;
-  font-size:11px;
-  font-weight:700;
-  white-space:nowrap;
-}
-.favourite-chip:hover { background:rgba(94,199,255,.14); }
-.favourite-remove {
-  display:grid;
-  place-items:center;
-  width:19px;
-  height:19px;
-  border-radius:50%;
-  background:rgba(255,255,255,.08);
-  color:#a9bbca;
-  font-size:13px;
-  line-height:1;
-}
-.favourite-remove:hover { color:#fff; background:rgba(255,120,120,.18); }
-
 /* Hero summary row: five equal cards, with rain likelihood included */
 .hero-stats-grid {
   grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
@@ -172,9 +117,7 @@
   .hero-stats-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
   }
-  .location-tools { align-items:stretch; }
-  .favourite-add-btn { flex:1; }
-  .favourites-row { align-items:flex-start; }
+
   .day-row.consensus-row {
     grid-template-columns: 1fr 1fr !important;
     column-gap: 8px !important;
