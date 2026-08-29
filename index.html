@@ -46,23 +46,17 @@
               <p id="condition" class="condition">—</p>
               <p id="feelsLike" class="muted">Feels like —</p>
             </div>
-            <div id="weatherIcon" class="weather-icon">🌤️</div>
+            <div id="weatherIcon" class="weather-icon hero-static-icon">🌤️</div>
           </div>
 
-          <div class="confidence-strip">
-            <div>
-              <small>Rain likelihood</small>
-              <strong id="confidenceBadge" class="confidence high">HIGH</strong>
-            </div>
-            <p id="confidenceText">Models are closely aligned.</p>
-          </div>
-
-          <div class="stats-grid">
+          <div class="stats-grid hero-stats-grid">
+            <div class="stat likelihood-stat"><span>☔</span><div><small>Rain likelihood</small><strong id="confidenceBadge" class="confidence high">HIGH</strong></div></div>
             <div class="stat"><span>💧</span><div><small>Humidity</small><strong id="humidity">—</strong></div></div>
             <div class="stat"><span>💨</span><div><small>Wind</small><strong id="wind">—</strong></div></div>
             <div class="stat"><span>🌧️</span><div><small>Rain now</small><strong id="rain">—</strong></div></div>
             <div class="stat"><span>🧠</span><div><small>Models live</small><strong id="modelCount">—</strong></div></div>
           </div>
+          <p id="confidenceText" class="hidden">Models are closely aligned.</p>
         </section>
 
         <section class="section-card glass">
