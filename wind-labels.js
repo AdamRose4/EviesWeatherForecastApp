@@ -1,4 +1,4 @@
-// Wind presentation for hourly forecast tiles only.
+// Wind categories for hourly forecast tiles only.
 (function () {
   function windCategory(speed) {
     const s = Math.round(Number(speed));
@@ -10,29 +10,26 @@
     return 'Strong Gale';
   }
 
-  function updateWindLabels() {
-    // Only alter wind text inside the Next 24 Hours and Tomorrow hourly tiles.
+  function updateHourlyWindLabels() {
     document.querySelectorAll('#hourlyForecast .hour-card .hour-extra, #tomorrowHourlyForecast .hour-card .hour-extra').forEach(line => {
       const text = line.textContent || '';
       if (!text.includes('💨')) return;
+
       const match = text.match(/(\d+)\s*km\/h/);
       if (!match) return;
+
       const speed = Number(match[1]);
-      line.textContent = `💨 ${speed} km/h ${windCategory(speed)}`;
+      const wanted = `💨 ${speed} km/h ${windCategory(speed)}`;
+      if (line.textContent !== wanted) line.textContent = wanted;
     });
   }
 
-  const root = document.getElementById('weatherContent') || document.body;
-  const observer = new MutationObserver(() => updateWindLabels());
-  observer.observe(root, { childList: true, subtree: true, characterData: true });
-
+  // No MutationObserver here: it previously reacted to its own text updates and
+  // could lock the page during initial rendering. A lightweight timer is safe,
+  // idempotent and also picks up the app's 60-second weather refreshes.
   window.windCategory = windCategory;
-  window.updateWindLabels = updateWindLabels;
+  window.updateHourlyWindLabels = updateHourlyWindLabels;
 
-  let tries = 0;
-  const starter = setInterval(() => {
-    tries += 1;
-    updateWindLabels();
-    if (document.querySelector('.hour-card') || tries >= 40) clearInterval(starter);
-  }, 250);
+  updateHourlyWindLabels();
+  setInterval(updateHourlyWindLabels, 1000);
 })();
