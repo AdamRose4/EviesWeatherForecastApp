@@ -2,6 +2,9 @@
 .hour-card { min-width: 92px; }
 .hour-extra { font-size: 9px; color: var(--muted); margin-top: 4px; line-height: 1.2; }
 .hour-extra.nowrap { white-space: nowrap; }
+.hour-extra .wind-speed,
+.hour-extra .wind-category { display:block; white-space:nowrap; }
+.hour-extra .wind-category { margin-top:2px; font-size:8px; color:var(--muted); }
 .model-vote { margin-top: 4px; font-weight:700; }
 .hour-confidence { margin-top: 6px; margin-bottom: 2px; }
 
