@@ -30,6 +30,7 @@ const weatherCodes = {
 const cToF = c => (c * 9/5) + 32;
 const temp = c => c == null ? '—' : `${Math.round(state.unit === 'C' ? c : cToF(c))}°`;
 const mean = arr => arr.length ? arr.reduce((a,b)=>a+b,0)/arr.length : null;
+const clamp = (n,min,max) => Math.max(min,Math.min(max,n));
 
 function setStatus(type, message='') {
   $('loading').classList.add('hidden');
@@ -115,9 +116,12 @@ function consensusAt(timeKey) {
   const points = state.models.map(m => modelPoint(m, timeKey)).filter(Boolean);
   if (!points.length) return null;
   const temps = points.map(p=>p.temperature).filter(Number.isFinite);
-  const rainCount = points.filter(p => (p.precipitation ?? 0) >= 0.1).length;
+  const wetCount = points.filter(p => (p.precipitation ?? 0) >= 0.1).length;
   const available = points.length;
-  const rainShare = rainCount / available;
+  const spread = temps.length ? Math.max(...temps) - Math.min(...temps) : 99;
+  // Rain likelihood is based only on how many available models predict measurable rain.
+  // 0-2 = Low, 3-4 = Medium, 5-6 = High (scaled when fewer than six models are available).
+  const rainShare = wetCount / available;
   let cls = 'low', label = 'Low';
   if (rainShare >= 5/6) { cls='high'; label='High'; }
   else if (rainShare >= 3/6) { cls='medium'; label='Medium'; }
@@ -126,10 +130,11 @@ function consensusAt(timeKey) {
   return {
     points,
     available,
-    rainCount,
-    rainPercent: Math.round(100 * rainCount / available),
+    wetCount,
+    wetPercent: Math.round(100 * wetCount / available),
     averageTemp: mean(temps),
     code,
+    spread,
     cls,
     label,
     missing: MODEL_DEFS.filter(def => !points.some(p=>p.model.key===def.key)).map(d=>d.key)
@@ -147,7 +152,7 @@ function aggregateModelDay(model, dateKey) {
     high: temps.length ? Math.max(...temps) : null,
     low: temps.length ? Math.min(...temps) : null,
     rain,
-    raining: rain >= 0.2,
+    wet: rain >= 0.2,
     code: model.data.hourly.weather_code?.[noon.i] ?? 2
   };
 }
@@ -157,14 +162,14 @@ function dayConsensus(dateKey) {
   if (!rows.length) return null;
   const highs = rows.map(r=>r.high).filter(Number.isFinite);
   const lows = rows.map(r=>r.low).filter(Number.isFinite);
-  const rainCount = rows.filter(r=>r.raining).length;
+  const wetCount = rows.filter(r=>r.wet).length;
   const available = rows.length;
-  const rainShare = rainCount / available;
+  const rainShare = wetCount / available;
   let cls='low', label='Low';
   if (rainShare >= 5/6) { cls='high'; label='High'; }
   else if (rainShare >= 3/6) { cls='medium'; label='Medium'; }
   const codes = rows.map(r=>r.code).filter(Number.isFinite).sort((a,b)=>a-b);
-  return { rows, available, rainCount, rainPercent:Math.round(100*rainCount/available), high:mean(highs), low:mean(lows), code:codes[Math.floor(codes.length/2)] ?? 2, cls, label };
+  return { rows, available, wetCount, wetPercent:Math.round(100*wetCount/available), high:mean(highs), low:mean(lows), code:codes[Math.floor(codes.length/2)] ?? 2, cls, label };
 }
 
 function baseHourlyAt(timeKey) {
@@ -190,17 +195,15 @@ function renderHourlyCard(timeKey, label) {
   if (!c) return '';
   const w = weatherCodes[c.code] || ['Weather','🌤️'];
   const extra = baseHourlyAt(timeKey);
-  const availabilityText = c.available === MODEL_DEFS.length ? `${c.rainCount}/${c.available} rain` : `${c.rainCount}/${c.available} available rain`;
+  const availabilityText = c.available === MODEL_DEFS.length ? `${c.wetCount}/${c.available} rain` : `${c.wetCount}/${c.available} available rain`;
   const missingTitle = c.missing.length ? `Missing for this hour: ${c.missing.join(', ')}` : 'All 6 sources contributed';
   return `<div class="hour-card" title="${missingTitle}">
     <div class="time">${label}</div>
     <div class="icon">${w[1]}</div>
     <strong>${temp(c.averageTemp)}</strong>
-    <small>${c.rainPercent}% models rain</small>
-    <div class="model-vote">${availabilityText}</div>
+    <div class="model-vote ${c.cls}">${availabilityText}</div>
     <div class="hour-extra">💨 ${Number.isFinite(extra.wind) ? Math.round(extra.wind) + ' km/h' : '—'}</div>
     <div class="hour-extra">☀️ UV ${uvLabel(extra.uv)}</div>
-    <div class="hour-confidence ${c.cls}"><i class="confidence-dot ${c.cls}"></i>${c.label}</div>
   </div>`;
 }
 
@@ -229,8 +232,8 @@ function render() {
     $('confidenceBadge').className = `confidence ${currentConsensus.cls}`;
     $('confidenceBadge').textContent = currentConsensus.label.toUpperCase();
     $('confidenceText').textContent = currentConsensus.available === 6
-      ? `All 6 sources analysed · ${currentConsensus.rainCount}/6 predict measurable rain this hour.`
-      : `${currentConsensus.available}/6 sources available · ${currentConsensus.rainCount}/${currentConsensus.available} available models predict rain.`;
+      ? `All 6 sources analysed · ${currentConsensus.wetCount}/6 predict measurable rain this hour.`
+      : `${currentConsensus.available}/6 sources available · ${currentConsensus.wetCount}/${currentConsensus.available} available models predict rain.`;
   }
 
   $('hourlyForecast').innerHTML = d.hourly.time.slice(start, start + 24).map((t,i) => {
@@ -264,7 +267,7 @@ function renderModelComparison(dateKey) {
       <b>${def.key}</b>
       <div class="model-icon">${icon}</div>
       <div class="model-temp">${temp(day.high)} <span>${temp(day.low)}</span></div>
-      <small>${day.raining ? 'Rain' : 'No rain'} · ${day.rain.toFixed(1)} mm</small>
+      <small>${day.wet ? 'Rain' : 'No rain'} · ${day.rain.toFixed(1)} mm</small>
     </div>`;
   });
   $('modelComparison').innerHTML = cards.join('');
@@ -281,7 +284,7 @@ function renderDaily() {
     return `<div class="day-row consensus-row">
       <div class="day">${dayName}</div>
       <div class="day-weather"><span>${icon}</span><small>${description}</small></div>
-      <div class="desc">${c.rainPercent}% models rain · ${c.rainCount}/${c.available} sources</div>
+      <div class="desc">${c.wetPercent}% models rain · ${c.wetCount}/${c.available} sources</div>
       <div class="daily-confidence ${c.cls}"><i class="confidence-dot ${c.cls}"></i>${c.label}</div>
       <div class="temps">${temp(c.high)}<span>${temp(c.low)}</span></div>
     </div>`;
