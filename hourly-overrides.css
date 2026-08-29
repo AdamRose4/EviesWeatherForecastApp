@@ -141,6 +141,49 @@
   min-height: 185px;
 }
 
+/* Rosie: weather-reactive golden cocker spaniel */
+.hero-card { position:relative; overflow:hidden; }
+.rosie-lane {
+  position:absolute;
+  left:31%;
+  right:23%;
+  top:112px;
+  height:78px;
+  overflow:hidden;
+  pointer-events:none;
+  z-index:1;
+}
+.rosie {
+  position:absolute;
+  left:-105px;
+  bottom:0;
+  width:92px;
+  height:66px;
+  transform-origin:center bottom;
+  animation:rosie-cross 15s linear infinite;
+}
+.rosie svg { width:100%; height:100%; overflow:visible; filter:drop-shadow(0 5px 7px rgba(0,0,0,.18)); }
+.rosie.happy { animation-duration:12s; }
+.rosie.sad { animation-duration:18s; }
+.rosie.happy .rosie-dog { animation:rosie-bounce .55s ease-in-out infinite; }
+.rosie.sad .rosie-dog { animation:rosie-sad-bob 1.25s ease-in-out infinite; }
+.rosie-tail { transform-box:fill-box; transform-origin:95% 50%; }
+.rosie.happy .rosie-tail { animation:rosie-tail-wag .28s ease-in-out infinite alternate; }
+.rosie.sad .rosie-tail { animation:rosie-tail-sad 1.2s ease-in-out infinite alternate; }
+.rosie-leg { transform-box:fill-box; transform-origin:50% 0%; }
+.rosie-leg-a { animation:rosie-leg-a .5s ease-in-out infinite alternate; }
+.rosie-leg-b { animation:rosie-leg-b .5s ease-in-out infinite alternate; }
+.rosie.sad .rosie-leg-a,
+.rosie.sad .rosie-leg-b { animation-duration:1s; }
+.hero-main,.hero-stats-grid { position:relative; z-index:2; }
+@keyframes rosie-cross { from { left:-105px; } to { left:calc(100% + 12px); } }
+@keyframes rosie-bounce { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-5px); } }
+@keyframes rosie-sad-bob { 0%,100% { transform:translateY(0); } 50% { transform:translateY(2px); } }
+@keyframes rosie-tail-wag { from { transform:rotate(-16deg); } to { transform:rotate(22deg); } }
+@keyframes rosie-tail-sad { from { transform:rotate(-18deg); } to { transform:rotate(-8deg); } }
+@keyframes rosie-leg-a { from { transform:rotate(10deg); } to { transform:rotate(-12deg); } }
+@keyframes rosie-leg-b { from { transform:rotate(-12deg); } to { transform:rotate(10deg); } }
+
 /* 7-day model consensus: one identical grid for headings and every row */
 .daily-header,
 .day-row.consensus-row {
@@ -149,77 +192,45 @@
   column-gap: 18px !important;
   align-items: center !important;
 }
-
-.daily-header {
-  padding-left: 13px !important;
-  padding-right: 13px !important;
-}
-
+.daily-header { padding-left: 13px !important; padding-right: 13px !important; }
 .daily-header > div,
-.day-row.consensus-row > div {
-  min-width: 0;
-  width: 100%;
-  text-align: left !important;
-  justify-self: stretch;
-}
-
+.day-row.consensus-row > div { min-width:0; width:100%; text-align:left !important; justify-self:stretch; }
 .day-row.consensus-row .day,
 .day-row.consensus-row .day-weather,
 .day-row.consensus-row .desc,
-.day-row.consensus-row .daily-confidence {
-  justify-content: flex-start;
-  text-align: left !important;
-}
-
-.daily-header > div:nth-child(5) {
-  display: grid;
-  grid-template-columns: 38px 38px;
-  column-gap: 8px;
-  justify-content: start;
-}
-
+.day-row.consensus-row .daily-confidence { justify-content:flex-start; text-align:left !important; }
+.daily-header > div:nth-child(5) { display:grid; grid-template-columns:38px 38px; column-gap:8px; justify-content:start; }
 .day-row.consensus-row .temps {
-  display: grid !important;
-  grid-template-columns: 38px 38px;
-  column-gap: 8px;
-  justify-content: start;
-  align-items: baseline;
-  text-align: left !important;
-  font-variant-numeric: tabular-nums;
+  display:grid !important;
+  grid-template-columns:38px 38px;
+  column-gap:8px;
+  justify-content:start;
+  align-items:baseline;
+  text-align:left !important;
+  font-variant-numeric:tabular-nums;
 }
-
-.day-row.consensus-row .temps span {
-  margin-left: 0 !important;
-  text-align: left;
-}
+.day-row.consensus-row .temps span { margin-left:0 !important; text-align:left; }
 
 @media (max-width: 760px) {
-  .hero-stats-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  .hero-stats-grid { grid-template-columns:repeat(2,minmax(0,1fr)) !important; }
+
+  .hourly-scroll { grid-auto-columns:118px !important; gap:3px !important; }
+  .hour-card { min-width:118px !important; padding:7px 6px !important; }
+  .hour-card .icon { margin:4px 0 !important; }
+  .model-vote { margin-top:2px; }
+  .hour-extra { margin-top:2px; line-height:1.18; }
+
+  .rosie-lane {
+    left:36%;
+    right:7%;
+    top:132px;
+    height:62px;
   }
+  .rosie { width:67px; height:50px; left:-78px; }
+  @keyframes rosie-cross { from { left:-78px; } to { left:calc(100% + 8px); } }
+  .weather-scene { transform:scale(.86); transform-origin:top right; }
 
-  .hourly-scroll {
-    grid-auto-columns: 118px !important;
-    gap: 3px !important;
-  }
-
-  .hour-card {
-    min-width: 118px !important;
-    padding: 7px 6px !important;
-  }
-
-  .hour-card .icon { margin: 4px 0 !important; }
-  .model-vote { margin-top: 2px; }
-  .hour-extra { margin-top: 2px; line-height: 1.18; }
-
-  .daily-header {
-    display: none !important;
-  }
-
-  .day-row.consensus-row {
-    grid-template-columns: 1fr 1fr !important;
-    column-gap: 8px !important;
-  }
-
+  .daily-header { display:none !important; }
+  .day-row.consensus-row { grid-template-columns:1fr 1fr !important; column-gap:8px !important; }
   .search-results.predictive-results { top:72px; }
 }
