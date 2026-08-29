@@ -10,6 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="hourly-overrides.css" />
+  <link rel="stylesheet" href="weather-effects.css" />
 </head>
 <body>
   <div class="app-shell">
@@ -36,6 +37,7 @@
 
       <section id="weatherContent" class="hidden">
         <section class="hero-card glass">
+          <div id="weatherScene" class="weather-scene" aria-hidden="true"></div>
           <div class="hero-main">
             <div>
               <p id="locationName" class="eyebrow">—</p>
@@ -112,6 +114,7 @@
   <script src="app.js"></script>
   <script src="hourly-overrides.js"></script>
   <script src="accuracy-backtest.js"></script>
+  <script src="weather-effects.js"></script>
   <script src="auto-refresh.js"></script>
 </body>
 </html>
