@@ -1,5 +1,4 @@
 // Dynamic hero animation based on the same six-model consensus used by the "Now" tile.
-// The hero also includes seasonal scenery: winter, spring, summer and autumn.
 (function () {
   function weatherType(code) {
     if ([95,96,99].includes(code)) return 'storm';
@@ -8,14 +7,6 @@
     if ([51,53,55,56,57,61,63,65,66,67,80,81,82].includes(code)) return 'rain';
     if ([1,2,3].includes(code)) return 'cloudy';
     return 'clear';
-  }
-
-  function currentSeason(date = new Date()) {
-    const month = date.getMonth(); // 0 = Jan
-    if (month === 11 || month <= 1) return 'winter';
-    if (month >= 2 && month <= 4) return 'spring';
-    if (month >= 5 && month <= 7) return 'summer';
-    return 'autumn';
   }
 
   function isNight() {
@@ -39,35 +30,6 @@
       const delay = -((i * .41) % 2.5);
       return `<span class="star" style="left:${left}%;top:${top}%;animation-delay:${delay}s"></span>`;
     }).join('');
-  }
-
-  function seasonalMarkup(season) {
-    if (season === 'winter') {
-      return `<div class="season-layer season-winter">
-        <div class="season-ground winter-ground"></div>
-        <div class="snow-mound snow-mound-a"></div><div class="snow-mound snow-mound-b"></div>
-        <span class="ambient-snow as1">❄</span><span class="ambient-snow as2">❄</span><span class="ambient-snow as3">❄</span><span class="ambient-snow as4">❄</span>
-      </div>`;
-    }
-    if (season === 'spring') {
-      return `<div class="season-layer season-spring">
-        <div class="season-ground spring-ground"></div>
-        <span class="grass-tuft gt1"></span><span class="grass-tuft gt2"></span><span class="grass-tuft gt3"></span>
-        <span class="spring-flower sf1"></span><span class="spring-flower sf2"></span><span class="spring-flower sf3"></span><span class="spring-flower sf4"></span><span class="spring-flower sf5"></span>
-      </div>`;
-    }
-    if (season === 'summer') {
-      return `<div class="season-layer season-summer">
-        <div class="season-ground summer-ground"></div>
-        <div class="beach-umbrella"><div class="umbrella-canopy"></div><div class="umbrella-pole"></div></div>
-        <span class="shell shell-a">◔</span><span class="shell shell-b">◡</span>
-      </div>`;
-    }
-    return `<div class="season-layer season-autumn">
-      <div class="season-ground autumn-ground"></div>
-      <span class="ground-leaf gl1"></span><span class="ground-leaf gl2"></span><span class="ground-leaf gl3"></span><span class="ground-leaf gl4"></span><span class="ground-leaf gl5"></span>
-      <span class="falling-leaf fl1">◆</span><span class="falling-leaf fl2">◆</span><span class="falling-leaf fl3">◆</span>
-    </div>`;
   }
 
   function getAppState() {
@@ -102,18 +64,13 @@
 
     const code = consensusWeatherCode(appState);
     const type = weatherType(code);
-    const season = currentSeason();
     const night = isNight();
 
-    card.classList.remove(
-      'weather-clear','weather-cloudy','weather-rain','weather-snow','weather-fog','weather-storm','weather-night',
-      'season-winter-card','season-spring-card','season-summer-card','season-autumn-card'
-    );
-    card.classList.add(`weather-${type}`, `season-${season}-card`);
+    card.classList.remove('weather-clear','weather-cloudy','weather-rain','weather-snow','weather-fog','weather-storm','weather-night');
+    card.classList.add(`weather-${type}`);
     if (night) card.classList.add('weather-night');
 
-    let html = seasonalMarkup(season);
-    html += `<div class="live-weather-layer">`;
+    let html = '';
     if (night) html += `<div class="moon-disc"></div>${stars()}`;
     else if (type === 'clear' || type === 'cloudy') html += `<div class="sun-disc"></div>`;
 
@@ -125,7 +82,6 @@
     if (type === 'snow') html += drops(24,'snow-flake','❄');
     if (type === 'fog') html += `<div class="fog-bank" style="top:22%"></div><div class="fog-bank" style="top:37%;animation-delay:-4s"></div><div class="fog-bank" style="top:52%;animation-delay:-7s"></div>`;
     if (type === 'clear' && !night) html += `<div class="scene-cloud back"></div>`;
-    html += `</div>`;
 
     scene.innerHTML = html;
   }
