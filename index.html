@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#07111f" />
+  <title>Evie&apos;s Weather Forecasting App</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">☀</div>
+        <div><h1>Evie&apos;s Weather Forecasting App</h1><p>Six weather models. One clearer forecast.</p></div>
+      </div>
+      <button id="unitBtn" class="unit-btn" aria-label="Toggle temperature unit">°C</button>
+    </header>
+
+    <main>
+      <section class="search-panel glass">
+        <form id="searchForm" class="search-form">
+          <input id="searchInput" autocomplete="off" placeholder="Search town, city or postcode…" aria-label="Search location" />
+          <button type="submit">Search</button>
+        </form>
+        <button id="locationBtn" class="location-btn">⌖ Use my location</button>
+        <div id="searchResults" class="search-results hidden"></div>
+      </section>
+
+      <section id="loading" class="status-card glass hidden">Comparing weather models…</section>
+      <section id="error" class="status-card error hidden"></section>
+
+      <section id="weatherContent" class="hidden">
+        <section class="hero-card glass">
+          <div class="hero-main">
+            <div>
+              <p id="locationName" class="eyebrow">—</p>
+              <div class="consensus-label">CONSENSUS NOW</div>
+              <h2 id="temperature">--°</h2>
+              <p id="condition" class="condition">—</p>
+              <p id="feelsLike" class="muted">Feels like —</p>
+            </div>
+            <div id="weatherIcon" class="weather-icon">🌤️</div>
+          </div>
+
+          <div class="confidence-strip">
+            <div>
+              <small>Rain likelihood</small>
+              <strong id="confidenceBadge" class="confidence high">HIGH</strong>
+            </div>
+            <p id="confidenceText">Models are closely aligned.</p>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat"><span>💧</span><div><small>Humidity</small><strong id="humidity">—</strong></div></div>
+            <div class="stat"><span>💨</span><div><small>Wind</small><strong id="wind">—</strong></div></div>
+            <div class="stat"><span>🌧️</span><div><small>Rain now</small><strong id="rain">—</strong></div></div>
+            <div class="stat"><span>🧠</span><div><small>Models live</small><strong id="modelCount">—</strong></div></div>
+          </div>
+        </section>
+
+        <section class="section-card glass">
+          <div class="section-heading">
+            <div><span class="kicker">AVERAGED</span><h3>Next 24 hours</h3></div>
+            <span id="updatedAt" class="muted"></span>
+          </div>
+          <div id="hourlyForecast" class="hourly-scroll"></div>
+          <div class="confidence-key" aria-label="Hourly forecast confidence key">
+            <span><i class="confidence-dot high"></i><strong>Green</strong> High rain likelihood (5–6 models)</span>
+            <span><i class="confidence-dot medium"></i><strong>Yellow</strong> Medium rain likelihood (3–4 models)</span>
+            <span><i class="confidence-dot low"></i><strong>Red</strong> Low rain likelihood (0–2 models)</span>
+          </div>
+        </section>
+
+        <section class="section-card glass">
+          <div class="section-heading">
+            <div><span class="kicker">TOMORROW</span><h3>Tomorrow hour by hour</h3></div>
+            <span id="tomorrowDate" class="muted"></span>
+          </div>
+          <div id="tomorrowHourlyForecast" class="hourly-scroll"></div>
+          <div class="confidence-key" aria-label="Tomorrow hourly forecast confidence key">
+            <span><i class="confidence-dot high"></i><strong>Green</strong> High rain likelihood (5–6 models)</span>
+            <span><i class="confidence-dot medium"></i><strong>Yellow</strong> Medium rain likelihood (3–4 models)</span>
+            <span><i class="confidence-dot low"></i><strong>Red</strong> Low rain likelihood (0–2 models)</span>
+          </div>
+        </section>
+
+        <section class="section-card glass">
+          <div class="section-heading">
+            <div><span class="kicker">SIDE BY SIDE</span><h3>What each model says tomorrow</h3></div>
+          </div>
+          <div id="modelComparison" class="model-grid"></div>
+          <p class="explain">A model counts as predicting “rain” when it forecasts measurable precipitation during the day. This avoids pretending that different probability systems are directly identical.</p>
+        </section>
+
+        <section class="section-card glass">
+          <div class="section-heading"><div><span class="kicker">MODEL CONSENSUS</span><h3>7-day forecast</h3></div></div>
+          <div class="daily-header" aria-hidden="true">
+            <div>Day</div><div>Weather</div><div>Consensus forecast</div><div>Rain likelihood</div><div>High / Low</div>
+          </div>
+          <div id="dailyForecast" class="daily-list"></div>
+        </section>
+
+        <section class="section-card glass accuracy-section">
+          <div class="section-heading">
+            <div><span class="kicker">SOURCE INDEX</span><h3>Forecast sources & recent accuracy</h3></div>
+            <span id="accuracyWindow" class="muted">Six-source index</span>
+          </div>
+          <p class="accuracy-intro">Accuracy is location-specific. This index identifies the six model sources used in the consensus and shows whether each source is currently contributing data.</p>
+          <div id="accuracyIndex" class="accuracy-index"></div>
+          <p id="accuracyNote" class="explain">Scores are an independent Weather Consensus index, not an official accuracy percentage published by the providers. Lower temperature error and correct rain/dry calls produce a higher score.</p>
+        </section>
+      </section>
+    </main>
+
+    <footer>Forecast data via Open-Meteo. Evie&apos;s Weather Forecasting App is independent of the listed forecast organisations.</footer>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
