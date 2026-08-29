@@ -19,14 +19,18 @@
       if (!match) return;
 
       const speed = Number(match[1]);
-      const wanted = `💨 ${speed} km/h ${windCategory(speed)}`;
-      if (line.textContent !== wanted) line.textContent = wanted;
+      const category = windCategory(speed);
+      const wanted = `💨 ${speed} km/h\n${category}`;
+
+      if (line.dataset.windFormatted !== wanted) {
+        line.innerHTML = `<span class="wind-speed">💨 ${speed} km/h</span><span class="wind-category">${category}</span>`;
+        line.dataset.windFormatted = wanted;
+      }
     });
   }
 
-  // No MutationObserver here: it previously reacted to its own text updates and
-  // could lock the page during initial rendering. A lightweight timer is safe,
-  // idempotent and also picks up the app's 60-second weather refreshes.
+  // No MutationObserver here: a lightweight timer safely picks up normal renders
+  // and the app's 60-second weather refresh without creating a feedback loop.
   window.windCategory = windCategory;
   window.updateHourlyWindLabels = updateHourlyWindLabels;
 
