@@ -1,15 +1,22 @@
 /* Hourly layout refinements */
-.hour-card { min-width: 109px; padding: 10px 8px; }
+.hourly-scroll {
+  grid-auto-columns: 114px !important;
+  gap: 5px !important;
+}
+.hour-card {
+  min-width: 114px;
+  padding: 8px 7px;
+}
 .hour-card .time { font-size: 12.6px; }
-.hour-card .icon { font-size: 34px; }
+.hour-card .icon { font-size: 34px; margin: 5px 0 !important; }
 .hour-card > strong { font-size: 21px; }
-.hour-extra { font-size: 10.5px; color: var(--muted); margin-top: 5px; line-height: 1.3; }
+.hour-extra { font-size: 10.5px; color: var(--muted); margin-top: 3px; line-height: 1.22; }
 .hour-extra.nowrap { white-space: nowrap; }
 .hour-extra .wind-speed,
 .hour-extra .wind-category { display:block; white-space:nowrap; }
-.hour-extra .wind-category { margin-top:2px; font-size:9.5px; color:var(--muted); }
-.model-vote { margin-top: 5px; font-weight:700; font-size:11.6px; }
-.hour-confidence { margin-top: 6px; margin-bottom: 2px; }
+.hour-extra .wind-category { margin-top:1px; font-size:9.5px; color:var(--muted); }
+.model-vote { margin-top: 3px; font-weight:700; font-size:11.6px; }
+.hour-confidence { margin-top: 4px; margin-bottom: 1px; }
 
 /* Rain likelihood colours */
 /* 1–2/6 rain = green, 3–4/6 = yellow, 5–6/6 = red */
@@ -189,6 +196,20 @@
   .hero-stats-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
   }
+
+  .hourly-scroll {
+    grid-auto-columns: 118px !important;
+    gap: 3px !important;
+  }
+
+  .hour-card {
+    min-width: 118px !important;
+    padding: 7px 6px !important;
+  }
+
+  .hour-card .icon { margin: 4px 0 !important; }
+  .model-vote { margin-top: 2px; }
+  .hour-extra { margin-top: 2px; line-height: 1.18; }
 
   .daily-header {
     display: none !important;
