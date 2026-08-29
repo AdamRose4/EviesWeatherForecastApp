@@ -1,14 +1,14 @@
 /* Hourly layout refinements */
-.hour-card { min-width: 104px; padding: 10px 8px; }
-.hour-card .time { font-size: 12px; }
-.hour-card .icon { font-size: 32px; }
-.hour-card > strong { font-size: 20px; }
-.hour-extra { font-size: 10px; color: var(--muted); margin-top: 5px; line-height: 1.3; }
+.hour-card { min-width: 109px; padding: 10px 8px; }
+.hour-card .time { font-size: 12.6px; }
+.hour-card .icon { font-size: 34px; }
+.hour-card > strong { font-size: 21px; }
+.hour-extra { font-size: 10.5px; color: var(--muted); margin-top: 5px; line-height: 1.3; }
 .hour-extra.nowrap { white-space: nowrap; }
 .hour-extra .wind-speed,
 .hour-extra .wind-category { display:block; white-space:nowrap; }
-.hour-extra .wind-category { margin-top:2px; font-size:9px; color:var(--muted); }
-.model-vote { margin-top: 5px; font-weight:700; font-size:11px; }
+.hour-extra .wind-category { margin-top:2px; font-size:9.5px; color:var(--muted); }
+.model-vote { margin-top: 5px; font-weight:700; font-size:11.6px; }
 .hour-confidence { margin-top: 6px; margin-bottom: 2px; }
 
 /* Rain likelihood colours */
