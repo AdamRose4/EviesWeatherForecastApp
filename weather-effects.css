@@ -1,11 +1,43 @@
 /* Animated current-weather hero scene */
 .hero-card { isolation:isolate; transition:background .8s ease, box-shadow .8s ease; }
 .hero-card .weather-scene { position:absolute; inset:0; overflow:hidden; pointer-events:none; z-index:0; opacity:.95; }
-.hero-card .hero-main,.hero-card .confidence-strip,.hero-card .stats-grid { position:relative; z-index:2; }
+.hero-card .hero-main,.hero-card .stats-grid { position:relative; z-index:2; }
 .hero-card::after { z-index:1; }
 
-.weather-scene .scene-cloud { position:absolute; right:4%; top:11%; font-size:clamp(78px,11vw,142px); filter:drop-shadow(0 18px 24px rgba(0,0,0,.22)); animation:cloudFloat 6s ease-in-out infinite; }
-.weather-scene .scene-cloud.back { right:16%; top:7%; opacity:.28; transform:scale(.72); animation-duration:10s; animation-direction:alternate-reverse; }
+.weather-scene .scene-cloud {
+  position:absolute;
+  right:5%;
+  top:17%;
+  width:138px;
+  height:48px;
+  border-radius:999px;
+  background:linear-gradient(180deg,rgba(255,255,255,.96),rgba(222,229,245,.9));
+  box-shadow:0 16px 28px rgba(0,0,0,.16);
+  animation:cloudFloat 6s ease-in-out infinite;
+}
+.weather-scene .scene-cloud::before,
+.weather-scene .scene-cloud::after {
+  content:"";
+  position:absolute;
+  border-radius:50%;
+  background:inherit;
+}
+.weather-scene .scene-cloud::before { width:66px; height:66px; left:17px; top:-31px; }
+.weather-scene .scene-cloud::after { width:76px; height:76px; right:14px; top:-37px; }
+.weather-scene .scene-cloud.back {
+  right:15%;
+  top:23%;
+  width:112px;
+  height:40px;
+  opacity:.24;
+  filter:brightness(.82);
+  animation-duration:10s;
+  animation-direction:alternate-reverse;
+}
+.weather-scene .scene-cloud.back::before { width:52px; height:52px; left:14px; top:-24px; }
+.weather-scene .scene-cloud.back::after { width:60px; height:60px; right:12px; top:-29px; }
+.weather-scene .scene-cloud.front { right:5%; top:21%; }
+
 .weather-scene .sun-disc { position:absolute; right:9%; top:10%; width:112px; height:112px; border-radius:50%; background:radial-gradient(circle at 35% 35%,#fff6ae 0 9%,#ffd453 28%,#ff9f28 63%,rgba(255,159,40,.15) 72%,transparent 74%); box-shadow:0 0 45px rgba(255,196,70,.36); animation:sunPulse 4s ease-in-out infinite; }
 .weather-scene .moon-disc { position:absolute; right:10%; top:9%; width:92px; height:92px; border-radius:50%; background:radial-gradient(circle at 34% 30%,#fff 0 5%,#e9efff 42%,#bcc8e8 100%); box-shadow:0 0 35px rgba(210,225,255,.28); }
 .weather-scene .star { position:absolute; width:3px; height:3px; border-radius:50%; background:#fff; opacity:.65; animation:twinkle 2.6s ease-in-out infinite; }
