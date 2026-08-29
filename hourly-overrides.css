@@ -131,58 +131,117 @@
   white-space: nowrap !important;
   font-size: 14px;
 }
-.likelihood-stat .confidence {
-  margin-top: 0;
-}
-.hero-static-icon {
-  display: none !important;
-}
-.hero-card .hero-main {
-  min-height: 185px;
-}
+.likelihood-stat .confidence { margin-top: 0; }
+.hero-static-icon { display: none !important; }
+.hero-card .hero-main { min-height: 185px; }
 
-/* Rosie: weather-reactive golden cocker spaniel */
+/* Rosie: detailed weather-reactive golden cocker spaniel */
 .hero-card { position:relative; overflow:hidden; }
 .rosie-lane {
   position:absolute;
-  left:31%;
-  right:23%;
-  top:112px;
-  height:78px;
-  overflow:hidden;
+  left:30%;
+  right:39%;
+  top:101px;
+  height:98px;
+  overflow:visible;
   pointer-events:none;
   z-index:1;
 }
 .rosie {
   position:absolute;
-  left:-105px;
+  left:4%;
   bottom:0;
-  width:92px;
-  height:66px;
+  width:112px;
+  height:80px;
+  transition:left 3.2s cubic-bezier(.45,.05,.35,1), transform .35s ease;
   transform-origin:center bottom;
-  animation:rosie-cross 15s linear infinite;
 }
-.rosie svg { width:100%; height:100%; overflow:visible; filter:drop-shadow(0 5px 7px rgba(0,0,0,.18)); }
-.rosie.happy { animation-duration:12s; }
-.rosie.sad { animation-duration:18s; }
-.rosie.happy .rosie-dog { animation:rosie-bounce .55s ease-in-out infinite; }
-.rosie.sad .rosie-dog { animation:rosie-sad-bob 1.25s ease-in-out infinite; }
-.rosie-tail { transform-box:fill-box; transform-origin:95% 50%; }
-.rosie.happy .rosie-tail { animation:rosie-tail-wag .28s ease-in-out infinite alternate; }
-.rosie.sad .rosie-tail { animation:rosie-tail-sad 1.2s ease-in-out infinite alternate; }
+.rosie svg {
+  width:100%;
+  height:100%;
+  overflow:visible;
+  filter:drop-shadow(0 7px 8px rgba(0,0,0,.22));
+}
+.rosie.face-left { transform:scaleX(-1); }
+.rosie.face-right { transform:scaleX(1); }
+.rosie-dog { transform-box:fill-box; transform-origin:center bottom; }
+.rosie-head-group { transform-box:fill-box; transform-origin:62% 72%; }
+.rosie-tail-group { transform-box:fill-box; transform-origin:90% 60%; }
+.rosie-ear { transform-box:fill-box; transform-origin:50% 8%; }
 .rosie-leg { transform-box:fill-box; transform-origin:50% 0%; }
-.rosie-leg-a { animation:rosie-leg-a .5s ease-in-out infinite alternate; }
-.rosie-leg-b { animation:rosie-leg-b .5s ease-in-out infinite alternate; }
-.rosie.sad .rosie-leg-a,
-.rosie.sad .rosie-leg-b { animation-duration:1s; }
+.rosie-hind-leg-group { transform-box:fill-box; transform-origin:60% 25%; }
+.rosie-front-legs { transform-box:fill-box; transform-origin:50% 20%; }
+.rosie-shadow { transform-box:fill-box; transform-origin:center; }
+.rosie-mouth-sad { display:none; }
+
+/* Walking is deliberately lively: body bob, head movement, ears, paws and tail */
+.rosie.walking .rosie-dog { animation:rosie-walk-bob .48s ease-in-out infinite; }
+.rosie.walking .rosie-head-group { animation:rosie-head-walk .72s ease-in-out infinite alternate; }
+.rosie.walking .rosie-leg-a { animation:rosie-leg-a .42s ease-in-out infinite alternate; }
+.rosie.walking .rosie-leg-b { animation:rosie-leg-b .42s ease-in-out infinite alternate; }
+.rosie.walking .rosie-hind-leg-group { animation:rosie-hind-step .42s ease-in-out infinite alternate; }
+.rosie.walking .rosie-ear-back { animation:rosie-ear-flop-a .55s ease-in-out infinite alternate; }
+.rosie.walking .rosie-ear-front { animation:rosie-ear-flop-b .55s ease-in-out infinite alternate; }
+.rosie.walking .rosie-shadow { animation:rosie-shadow-pulse .48s ease-in-out infinite; }
+
+/* Standing Rosie still feels alive */
+.rosie.standing .rosie-dog { animation:rosie-breathe 2.1s ease-in-out infinite; }
+.rosie.standing .rosie-head-group { animation:rosie-look 2.7s ease-in-out infinite; }
+.rosie.standing .rosie-ear-front { animation:rosie-ear-twitch 2.3s ease-in-out infinite; }
+
+/* Sitting pose: body settles, hindquarters drop, front paws stay planted */
+.rosie.sitting .rosie-dog { animation:rosie-sit-settle .55s ease-out both, rosie-sit-breathe 2.4s .55s ease-in-out infinite; }
+.rosie.sitting .rosie-body-group { transform:translateY(8px) rotate(-3deg); }
+.rosie.sitting .rosie-hind-leg-group { transform:translate(7px,7px) rotate(44deg) scaleY(.78); }
+.rosie.sitting .rosie-front-legs { transform:translateY(2px); }
+.rosie.sitting .rosie-head-group { animation:rosie-sit-look 2.4s .4s ease-in-out infinite; }
+.rosie.sitting .rosie-ear-back { animation:rosie-ear-twitch 2.6s ease-in-out infinite; }
+
+/* Happy Rosie */
+.rosie.happy .rosie-tail-group { animation:rosie-tail-happy .28s ease-in-out infinite alternate; }
+.rosie.happy .rosie-tongue { opacity:1; }
+.rosie.happy .rosie-mouth-happy { display:block; }
+.rosie.happy .rosie-mouth-sad { display:none; }
+.rosie.happy.sitting .rosie-head-group { animation-duration:1.9s; }
+
+/* Rainy Rosie: slower body language, droopy ears and sad expression */
+.rosie.sad { transition-duration:4s, .35s; }
+.rosie.sad .rosie-mouth-happy,
+.rosie.sad .rosie-tongue { display:none; }
+.rosie.sad .rosie-mouth-sad { display:block; }
+.rosie.sad .rosie-brow-left { transform:rotate(8deg); transform-origin:center; }
+.rosie.sad .rosie-brow-right { transform:rotate(-8deg); transform-origin:center; }
+.rosie.sad .rosie-tail-group { animation:rosie-tail-sad 1.3s ease-in-out infinite alternate; }
+.rosie.sad.walking .rosie-dog { animation-duration:.78s; }
+.rosie.sad.walking .rosie-leg-a,
+.rosie.sad.walking .rosie-leg-b,
+.rosie.sad.walking .rosie-hind-leg-group { animation-duration:.72s; }
+.rosie.sad .rosie-ear-back { transform:rotate(8deg); }
+.rosie.sad .rosie-ear-front { transform:rotate(-8deg); }
+
 .hero-main,.hero-stats-grid { position:relative; z-index:2; }
-@keyframes rosie-cross { from { left:-105px; } to { left:calc(100% + 12px); } }
-@keyframes rosie-bounce { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-5px); } }
-@keyframes rosie-sad-bob { 0%,100% { transform:translateY(0); } 50% { transform:translateY(2px); } }
-@keyframes rosie-tail-wag { from { transform:rotate(-16deg); } to { transform:rotate(22deg); } }
-@keyframes rosie-tail-sad { from { transform:rotate(-18deg); } to { transform:rotate(-8deg); } }
-@keyframes rosie-leg-a { from { transform:rotate(10deg); } to { transform:rotate(-12deg); } }
-@keyframes rosie-leg-b { from { transform:rotate(-12deg); } to { transform:rotate(10deg); } }
+
+@keyframes rosie-walk-bob {
+  0%,100% { transform:translateY(0) rotate(0deg); }
+  25% { transform:translateY(-4px) rotate(-1.5deg); }
+  50% { transform:translateY(-1px) rotate(0deg); }
+  75% { transform:translateY(-4px) rotate(1.5deg); }
+}
+@keyframes rosie-head-walk { from { transform:rotate(-4deg) translateY(1px); } to { transform:rotate(5deg) translateY(-2px); } }
+@keyframes rosie-leg-a { from { transform:rotate(15deg) translateY(0); } to { transform:rotate(-18deg) translateY(-1px); } }
+@keyframes rosie-leg-b { from { transform:rotate(-18deg) translateY(-1px); } to { transform:rotate(15deg) translateY(0); } }
+@keyframes rosie-hind-step { from { transform:rotate(-8deg); } to { transform:rotate(10deg); } }
+@keyframes rosie-ear-flop-a { from { transform:rotate(-7deg); } to { transform:rotate(8deg) translateY(1px); } }
+@keyframes rosie-ear-flop-b { from { transform:rotate(7deg); } to { transform:rotate(-8deg) translateY(1px); } }
+@keyframes rosie-shadow-pulse { 0%,100% { transform:scaleX(1); opacity:.7; } 50% { transform:scaleX(.84); opacity:.5; } }
+@keyframes rosie-tail-happy { from { transform:rotate(-20deg); } to { transform:rotate(25deg); } }
+@keyframes rosie-tail-sad { from { transform:rotate(-8deg) translateY(2px); } to { transform:rotate(5deg) translateY(4px); } }
+@keyframes rosie-breathe { 0%,100% { transform:translateY(0) scaleY(1); } 50% { transform:translateY(-1px) scaleY(1.015); } }
+@keyframes rosie-look { 0%,35%,100% { transform:rotate(0); } 50% { transform:rotate(-7deg); } 70% { transform:rotate(6deg); } }
+@keyframes rosie-ear-twitch { 0%,75%,100% { transform:rotate(0); } 82% { transform:rotate(7deg); } 90% { transform:rotate(-4deg); } }
+@keyframes rosie-sit-settle { from { transform:translateY(0); } to { transform:translateY(5px); } }
+@keyframes rosie-sit-breathe { 0%,100% { transform:translateY(5px); } 50% { transform:translateY(3px); } }
+@keyframes rosie-sit-look { 0%,25%,100% { transform:rotate(0) translateY(0); } 42% { transform:rotate(-9deg) translateY(-1px); } 67% { transform:rotate(7deg) translateY(-2px); } }
 
 /* 7-day model consensus: one identical grid for headings and every row */
 .daily-header,
@@ -220,15 +279,15 @@
   .model-vote { margin-top:2px; }
   .hour-extra { margin-top:2px; line-height:1.18; }
 
+  /* Keep Rosie in the centre-left safe zone and shrink the weather artwork */
   .rosie-lane {
-    left:36%;
-    right:7%;
-    top:132px;
-    height:62px;
+    left:37%;
+    right:31%;
+    top:139px;
+    height:72px;
   }
-  .rosie { width:67px; height:50px; left:-78px; }
-  @keyframes rosie-cross { from { left:-78px; } to { left:calc(100% + 8px); } }
-  .weather-scene { transform:scale(.86); transform-origin:top right; }
+  .rosie { width:78px; height:58px; }
+  .weather-scene { transform:scale(.78); transform-origin:top right; }
 
   .daily-header { display:none !important; }
   .day-row.consensus-row { grid-template-columns:1fr 1fr !important; column-gap:8px !important; }
