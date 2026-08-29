@@ -1,4 +1,4 @@
-// Wind presentation: show speed first, followed by a plain-English wind category.
+// Wind presentation for hourly forecast tiles only.
 (function () {
   function windCategory(speed) {
     const s = Math.round(Number(speed));
@@ -10,31 +10,9 @@
     return 'Strong Gale';
   }
 
-  function getAppState() {
-    try {
-      return typeof state !== 'undefined' ? state : null;
-    } catch (_) {
-      return null;
-    }
-  }
-
   function updateWindLabels() {
-    const appState = getAppState();
-    if (!appState?.data) return;
-
-    // Main summary card: speed on the first line, category underneath.
-    const windValue = document.getElementById('wind');
-    const windStat = windValue?.closest('.stat');
-    const windTitle = windStat?.querySelector('small');
-    const currentSpeed = Number(appState.data.current?.wind_speed_10m);
-    if (windValue && Number.isFinite(currentSpeed)) {
-      const rounded = Math.round(currentSpeed);
-      if (windTitle) windTitle.textContent = `${rounded} km/h`;
-      windValue.textContent = windCategory(rounded);
-    }
-
-    // Hourly cards: append the same category after the speed.
-    document.querySelectorAll('.hour-card .hour-extra').forEach(line => {
+    // Only alter wind text inside the Next 24 Hours and Tomorrow hourly tiles.
+    document.querySelectorAll('#hourlyForecast .hour-card .hour-extra, #tomorrowHourlyForecast .hour-card .hour-extra').forEach(line => {
       const text = line.textContent || '';
       if (!text.includes('💨')) return;
       const match = text.match(/(\d+)\s*km\/h/);
@@ -44,8 +22,8 @@
     });
   }
 
-  const observer = new MutationObserver(() => updateWindLabels());
   const root = document.getElementById('weatherContent') || document.body;
+  const observer = new MutationObserver(() => updateWindLabels());
   observer.observe(root, { childList: true, subtree: true, characterData: true });
 
   window.windCategory = windCategory;
@@ -55,6 +33,6 @@
   const starter = setInterval(() => {
     tries += 1;
     updateWindLabels();
-    if (getAppState()?.data || tries >= 40) clearInterval(starter);
+    if (document.querySelector('.hour-card') || tries >= 40) clearInterval(starter);
   }, 250);
 })();
