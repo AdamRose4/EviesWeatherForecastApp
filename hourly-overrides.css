@@ -1,0 +1,22 @@
+/* Hourly layout refinements */
+.hour-card { min-width: 92px; }
+.hour-extra { font-size: 9px; color: var(--muted); margin-top: 4px; line-height: 1.2; }
+.hour-extra.nowrap { white-space: nowrap; }
+.model-vote { margin-top: 4px; }
+.hour-confidence { margin-top: 6px; margin-bottom: 2px; }
+
+/* Rain likelihood: high rain is bad, low rain is good */
+.confidence-dot.high { background:#ff7272; box-shadow:0 0 0 3px rgba(255,114,114,.12); }
+.confidence-dot.medium { background:#ffd45c; box-shadow:0 0 0 3px rgba(255,212,92,.12); }
+.confidence-dot.low { background:#48dc8b; box-shadow:0 0 0 3px rgba(72,220,139,.12); }
+
+.hour-confidence.high,
+.daily-confidence.high { color:#ff9d9d; }
+.hour-confidence.medium,
+.daily-confidence.medium { color:#ffe08a; }
+.hour-confidence.low,
+.daily-confidence.low { color:#86efb2; }
+
+.confidence.high { background:rgba(255,114,114,.14); color:#ff9d9d; }
+.confidence.medium { background:rgba(255,212,92,.14); color:#ffe08a; }
+.confidence.low { background:rgba(72,220,139,.14); color:#86efb2; }
