@@ -27,9 +27,9 @@ renderHourlyCard = function(timeKey, label) {
 function refreshRainKeys() {
   document.querySelectorAll('.confidence-key').forEach(key => {
     key.innerHTML = `
-      <span>🔴 <strong>1–2/6 rain</strong></span>
+      <span>🟢 <strong>1–2/6 rain</strong></span>
       <span>🟡 <strong>3–4/6 rain</strong></span>
-      <span>🟢 <strong>5–6/6 rain</strong></span>`;
+      <span>🔴 <strong>5–6/6 rain</strong></span>`;
   });
 }
 
