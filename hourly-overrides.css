@@ -2,10 +2,15 @@
 .hour-card { min-width: 92px; }
 .hour-extra { font-size: 9px; color: var(--muted); margin-top: 4px; line-height: 1.2; }
 .hour-extra.nowrap { white-space: nowrap; }
-.model-vote { margin-top: 4px; }
+.model-vote { margin-top: 4px; font-weight:700; }
 .hour-confidence { margin-top: 6px; margin-bottom: 2px; }
 
-/* Rain likelihood: high rain is bad, low rain is good */
+/* Rain likelihood colours */
+/* 1–2/6 rain = green, 3–4/6 = yellow, 5–6/6 = red */
+.model-vote.low { color:#86efb2 !important; }
+.model-vote.medium { color:#ffe08a !important; }
+.model-vote.high { color:#ff9d9d !important; }
+
 .confidence-dot.high { background:#ff7272; box-shadow:0 0 0 3px rgba(255,114,114,.12); }
 .confidence-dot.medium { background:#ffd45c; box-shadow:0 0 0 3px rgba(255,212,92,.12); }
 .confidence-dot.low { background:#48dc8b; box-shadow:0 0 0 3px rgba(72,220,139,.12); }
