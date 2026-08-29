@@ -1,0 +1,87 @@
+/* Rosie v3: more cocker-spaniel detail, proper ear layering, safe patrol area */
+.rosie-lane{
+  position:absolute;
+  left:29%;
+  right:38%;
+  top:96px;
+  height:106px;
+  overflow:visible;
+  pointer-events:none;
+  z-index:1;
+}
+.rosie{
+  position:absolute;
+  left:6%;
+  bottom:0;
+  width:138px;
+  height:94px;
+  transition:left 2.9s cubic-bezier(.45,.05,.35,1), transform .28s ease;
+  transform-origin:center bottom;
+}
+.rosie svg{width:100%;height:100%;overflow:visible;filter:drop-shadow(0 7px 8px rgba(0,0,0,.22));}
+.rosie-direction{transform-box:fill-box;transform-origin:center center;transition:transform .25s ease;}
+.rosie.face-left .rosie-direction{transform:scaleX(-1);}
+.rosie.face-right .rosie-direction{transform:scaleX(1);}
+.rosie-dog{transform-box:fill-box;transform-origin:center bottom;}
+.rosie-head-group,.rosie-tail-group,.rosie-ear,.rosie-leg,.rosie-hind-leg-group,.rosie-front-legs{transform-box:fill-box;}
+.rosie-head-group{transform-origin:58% 72%;}
+.rosie-tail-group{transform-origin:92% 58%;}
+.rosie-ear{transform-origin:50% 8%;}
+.rosie-leg{transform-origin:50% 0%;}
+.rosie-hind-leg-group{transform-origin:60% 25%;}
+.rosie-front-legs{transform-origin:50% 20%;}
+.rosie-mouth-sad{display:none;}
+
+.rosie.walking .rosie-dog{animation:rosie3-walk-bob .44s ease-in-out infinite;}
+.rosie.walking .rosie-head-group{animation:rosie3-head-walk .68s ease-in-out infinite alternate;}
+.rosie.walking .rosie-leg-a{animation:rosie3-leg-a .4s ease-in-out infinite alternate;}
+.rosie.walking .rosie-leg-b{animation:rosie3-leg-b .4s ease-in-out infinite alternate;}
+.rosie.walking .rosie-hind-leg-group{animation:rosie3-hind-step .4s ease-in-out infinite alternate;}
+.rosie.walking .rosie-ear-back{animation:rosie3-ear-back .5s ease-in-out infinite alternate;}
+.rosie.walking .rosie-ear-front{animation:rosie3-ear-front .5s ease-in-out infinite alternate;}
+
+.rosie.standing .rosie-dog{animation:rosie3-breathe 2s ease-in-out infinite;}
+.rosie.standing .rosie-head-group{animation:rosie3-look 2.7s ease-in-out infinite;}
+.rosie.standing .rosie-ear-front{animation:rosie3-ear-twitch 2.3s ease-in-out infinite;}
+
+.rosie.sitting .rosie-dog{animation:rosie3-sit-settle .5s ease-out both,rosie3-sit-breathe 2.3s .5s ease-in-out infinite;}
+.rosie.sitting .rosie-body-group{transform:translateY(8px) rotate(-4deg);}
+.rosie.sitting .rosie-hind-leg-group{transform:translate(8px,8px) rotate(46deg) scaleY(.76);}
+.rosie.sitting .rosie-front-legs{transform:translateY(3px);}
+.rosie.sitting .rosie-head-group{animation:rosie3-sit-look 2.3s .35s ease-in-out infinite;}
+
+.rosie.happy .rosie-tail-group{animation:rosie3-tail-happy .25s ease-in-out infinite alternate;}
+.rosie.happy .rosie-tongue{opacity:1;}
+.rosie.happy .rosie-mouth-happy{display:block;}
+.rosie.happy .rosie-mouth-sad{display:none;}
+
+.rosie.sad{transition-duration:4s,.28s;}
+.rosie.sad .rosie-mouth-happy,.rosie.sad .rosie-tongue{display:none;}
+.rosie.sad .rosie-mouth-sad{display:block;}
+.rosie.sad .rosie-tail-group{animation:rosie3-tail-sad 1.2s ease-in-out infinite alternate;}
+.rosie.sad.walking .rosie-dog{animation-duration:.72s;}
+.rosie.sad.walking .rosie-leg-a,.rosie.sad.walking .rosie-leg-b,.rosie.sad.walking .rosie-hind-leg-group{animation-duration:.68s;}
+.rosie.sad .rosie-ear-back{transform:rotate(8deg);}
+.rosie.sad .rosie-ear-front{transform:rotate(-8deg);}
+
+@keyframes rosie3-walk-bob{0%,100%{transform:translateY(0)}25%{transform:translateY(-5px) rotate(-1.5deg)}50%{transform:translateY(-1px)}75%{transform:translateY(-5px) rotate(1.5deg)}}
+@keyframes rosie3-head-walk{from{transform:rotate(-5deg) translateY(1px)}to{transform:rotate(6deg) translateY(-2px)}}
+@keyframes rosie3-leg-a{from{transform:rotate(18deg)}to{transform:rotate(-20deg) translateY(-1px)}}
+@keyframes rosie3-leg-b{from{transform:rotate(-20deg) translateY(-1px)}to{transform:rotate(18deg)}}
+@keyframes rosie3-hind-step{from{transform:rotate(-10deg)}to{transform:rotate(12deg)}}
+@keyframes rosie3-ear-back{from{transform:rotate(-8deg) translateY(0)}to{transform:rotate(10deg) translateY(2px)}}
+@keyframes rosie3-ear-front{from{transform:rotate(9deg) translateY(0)}to{transform:rotate(-11deg) translateY(2px)}}
+@keyframes rosie3-tail-happy{from{transform:rotate(-22deg)}to{transform:rotate(28deg)}}
+@keyframes rosie3-tail-sad{from{transform:rotate(-8deg) translateY(2px)}to{transform:rotate(4deg) translateY(5px)}}
+@keyframes rosie3-breathe{0%,100%{transform:translateY(0)}50%{transform:translateY(-1px) scaleY(1.015)}}
+@keyframes rosie3-look{0%,35%,100%{transform:rotate(0)}50%{transform:rotate(-8deg)}70%{transform:rotate(7deg)}}
+@keyframes rosie3-ear-twitch{0%,75%,100%{transform:rotate(0)}82%{transform:rotate(8deg)}90%{transform:rotate(-5deg)}}
+@keyframes rosie3-sit-settle{from{transform:translateY(0)}to{transform:translateY(5px)}}
+@keyframes rosie3-sit-breathe{0%,100%{transform:translateY(5px)}50%{transform:translateY(3px)}}
+@keyframes rosie3-sit-look{0%,25%,100%{transform:rotate(0)}42%{transform:rotate(-10deg) translateY(-1px)}67%{transform:rotate(8deg) translateY(-2px)}}
+
+@media(max-width:760px){
+  .rosie-lane{left:22%;right:43%;top:128px;height:82px;}
+  .rosie{width:92px;height:64px;}
+  .weather-scene{transform:scale(.78);transform-origin:top right;}
+}
