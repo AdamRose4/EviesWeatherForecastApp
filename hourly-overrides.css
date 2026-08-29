@@ -1,5 +1,5 @@
 /* Hourly layout refinements */
-.hour-card { min-width: 104px; padding: 13px 11px; }
+.hour-card { min-width: 104px; padding: 10px 8px; }
 .hour-card .time { font-size: 12px; }
 .hour-card .icon { font-size: 32px; }
 .hour-card > strong { font-size: 20px; }
