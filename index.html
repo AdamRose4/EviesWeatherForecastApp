@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="hourly-overrides.css?v=20260829-13" />
   <link rel="stylesheet" href="rosie-upgrade.css?v=20260829-2" />
   <link rel="stylesheet" href="weather-effects.css?v=20260829-4" />
+  <link rel="stylesheet" href="radar-link.css?v=20260830-1" />
 </head>
 <body>
   <div class="app-shell">
@@ -63,6 +64,12 @@
             <div class="stat"><span>🧠</span><div><small>Models live</small><strong id="modelCount">—</strong></div></div>
           </div>
           <p id="confidenceText" class="hidden">Models are closely aligned.</p>
+          <div class="radar-forecast-wrap">
+            <a id="radarForecastBtn" class="radar-forecast-btn" href="radar.html">
+              <span>🌦️ Live Rain &amp; Cloud Forecast</span>
+              <span class="radar-sub">See where the weather is heading →</span>
+            </a>
+          </div>
         </section>
 
         <section class="section-card glass">
@@ -120,6 +127,7 @@
   <script src="weather-effects.js?v=20260829-5"></script>
   <script src="wind-labels.js?v=20260829-4"></script>
   <script src="location-features.js?v=20260829-1"></script>
+  <script src="radar-link.js?v=20260830-1"></script>
   <script src="auto-refresh.js"></script>
 </body>
 </html>
