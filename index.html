@@ -90,6 +90,15 @@
 
         <section class="section-card glass">
           <div class="section-heading">
+            <div><span class="kicker">SIDE BY SIDE</span><h3>What each model says now</h3></div>
+            <span id="nowModelTime" class="muted"></span>
+          </div>
+          <div id="nowModelComparison" class="model-grid"></div>
+          <p class="explain">Each card is the model forecast for the current hour at the selected location, including its weather type, temperature and forecast precipitation.</p>
+        </section>
+
+        <section class="section-card glass">
+          <div class="section-heading">
             <div><span class="kicker">SIDE BY SIDE</span><h3>What each model says tomorrow</h3></div>
           </div>
           <div id="modelComparison" class="model-grid"></div>
@@ -128,6 +137,7 @@
   <script src="wind-labels.js?v=20260829-4"></script>
   <script src="location-features.js?v=20260829-1"></script>
   <script src="radar-link.js?v=20260830-1"></script>
+  <script src="now-model-comparison.js?v=20260830-1"></script>
   <script src="auto-refresh.js"></script>
 </body>
 </html>
