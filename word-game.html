@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#07111f" />
+  <title>Evie's Daily Word Game</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#07111f;--panel:#102238;--panel2:#172c43;--text:#eff9ff;--muted:#91aabd;--accent:#5ec7ff;--correct:#55b77a;--present:#d5aa47;--absent:#425366;--line:rgba(255,255,255,.12)}
+    *{box-sizing:border-box} body{margin:0;min-height:100vh;background:radial-gradient(circle at top,#102b45 0,#07111f 42%,#050b14 100%);color:var(--text);font-family:Inter,system-ui,sans-serif}
+    .shell{width:min(760px,calc(100% - 24px));margin:0 auto;padding:18px 0 34px}.topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:16px}.brand{display:flex;gap:12px;align-items:center}.mark{width:44px;height:44px;border-radius:14px;background:linear-gradient(145deg,#5ec7ff,#318ac4);display:grid;place-items:center;font-size:23px;box-shadow:0 10px 28px rgba(42,151,213,.25)}h1{font-size:21px;margin:0}.sub{font-size:12px;color:var(--muted);margin-top:3px}.back{color:var(--accent);text-decoration:none;font-size:13px;font-weight:800;white-space:nowrap}
+    .game{background:linear-gradient(145deg,rgba(25,51,77,.96),rgba(13,31,50,.97));border:1px solid var(--line);border-radius:24px;padding:20px;box-shadow:0 24px 70px rgba(0,0,0,.25)}
+    .game-head{text-align:center}.kicker{font-size:10px;letter-spacing:.18em;font-weight:800;color:var(--accent)}.game-head h2{font-size:30px;margin:5px 0 3px}.game-head p{margin:0;color:var(--muted);font-size:13px}.status{height:38px;display:grid;place-items:center;font-weight:700;font-size:13px;color:#fff}.status.show{animation:pop .18s ease}.board{width:min(350px,100%);margin:6px auto 18px;display:grid;grid-template-rows:repeat(6,1fr);gap:6px}.row{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}.tile{aspect-ratio:1;border:2px solid rgba(255,255,255,.14);border-radius:8px;display:grid;place-items:center;font-size:30px;font-weight:800;text-transform:uppercase;background:rgba(5,15,27,.28);transition:transform .15s ease,border-color .15s ease}.tile.filled{border-color:rgba(255,255,255,.35);transform:scale(1.03)}.tile.correct{background:var(--correct);border-color:var(--correct)}.tile.present{background:var(--present);border-color:var(--present)}.tile.absent{background:var(--absent);border-color:var(--absent)}.tile.flip{animation:flip .5s ease both}
+    .keyboard{display:flex;flex-direction:column;gap:7px;margin:0 auto;max-width:650px}.key-row{display:flex;justify-content:center;gap:5px}.key{height:52px;min-width:36px;padding:0 8px;border:0;border-radius:7px;background:#7b8b9a;color:#fff;font-weight:800;font-size:13px;cursor:pointer;text-transform:uppercase}.key.wide{min-width:64px;font-size:11px}.key.correct{background:var(--correct)}.key.present{background:var(--present)}.key.absent{background:var(--absent)}
+    .lower{display:flex;justify-content:center;gap:10px;margin-top:18px;flex-wrap:wrap}.action{border:1px solid var(--line);background:rgba(255,255,255,.06);color:#e9f8ff;padding:10px 14px;border-radius:11px;font:inherit;font-size:12px;font-weight:800;cursor:pointer}.action.primary{background:rgba(94,199,255,.16);border-color:rgba(94,199,255,.36)}.legend{margin:18px auto 0;max-width:540px;border-top:1px solid var(--line);padding-top:15px;color:var(--muted);font-size:12px;line-height:1.6}.legend strong{color:#fff}.mini{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:4px;color:#fff;font-weight:800;margin:0 2px}.mini.correct{background:var(--correct)}.mini.present{background:var(--present)}.mini.absent{background:var(--absent)}
+    .modal{position:fixed;inset:0;background:rgba(2,7,13,.78);display:none;align-items:center;justify-content:center;padding:18px;z-index:20}.modal.open{display:flex}.modal-card{width:min(460px,100%);background:#13283f;border:1px solid var(--line);border-radius:20px;padding:22px;box-shadow:0 28px 80px rgba(0,0,0,.42)}.modal-card h3{margin:0 0 8px}.modal-card p{color:var(--muted);line-height:1.55}.modal-card .answer{font-size:28px;letter-spacing:.12em;color:#fff;font-weight:800;text-align:center;margin:16px 0}.modal-card button{width:100%;padding:11px;border:0;border-radius:11px;background:var(--accent);color:#062033;font-weight:800;cursor:pointer}
+    @keyframes flip{0%{transform:rotateX(0)}50%{transform:rotateX(90deg)}100%{transform:rotateX(0)}}@keyframes pop{0%{transform:scale(.95)}100%{transform:scale(1)}}
+    @media(max-width:560px){.shell{width:calc(100% - 14px);padding-top:10px}.game{padding:14px 10px 18px;border-radius:20px}.brand h1{font-size:17px}.sub{display:none}.game-head h2{font-size:25px}.tile{font-size:25px}.key{height:48px;min-width:29px;padding:0 5px;font-size:12px}.key.wide{min-width:51px;font-size:9px}.keyboard{gap:6px}.key-row{gap:4px}.legend{padding:14px 6px 0}.back{font-size:12px}}
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <div class="brand"><div class="mark">🔤</div><div><h1>Evie's Daily Word Game</h1><div class="sub">One five-letter word. Six attempts.</div></div></div>
+      <a class="back" href="index.html">← Back to weather</a>
+    </header>
+
+    <main class="game">
+      <div class="game-head"><span class="kicker">DAILY PUZZLE</span><h2>Guess the word</h2><p>Everyone gets the same word today.</p></div>
+      <div id="status" class="status"></div>
+      <div id="board" class="board" aria-label="Word game board"></div>
+      <div id="keyboard" class="keyboard" aria-label="On-screen keyboard"></div>
+      <div class="lower"><button id="helpBtn" class="action" type="button">How to play</button><button id="newBtn" class="action primary" type="button">Practice word</button></div>
+      <div class="legend"><strong>How it works:</strong> <span class="mini correct">A</span> right letter, right place. <span class="mini present">A</span> right letter, wrong place. <span class="mini absent">A</span> not in the word. Daily progress is saved on this device.</div>
+    </main>
+  </div>
+
+  <div id="modal" class="modal" role="dialog" aria-modal="true"><div class="modal-card"><h3 id="modalTitle">Daily puzzle</h3><p id="modalText"></p><div id="modalAnswer" class="answer"></div><button id="modalClose" type="button">Close</button></div></div>
+
+  <script>
+  (function(){
+    const WORDS=['APPLE','BRAVE','CLOUD','DREAM','EARTH','FLAME','GRACE','HEART','LIGHT','MUSIC','NURSE','OCEAN','PLANT','QUIET','RIVER','SMILE','STORM','TRAIN','WATER','WORLD','BEACH','CHAIR','FIELD','GREEN','HOUSE','LEMON','NIGHT','PEACH','QUEEN','SHINE','SHEEP','STONE','SWEET','TABLE','TIGER','TOAST','WATCH','WINDY','YOUNG','ZEBRA'];
+    const rows=6, cols=5;
+    let daily=true, row=0, col=0, guesses=Array.from({length:rows},()=>Array(cols).fill('')), finished=false;
+    const board=document.getElementById('board'), keyboard=document.getElementById('keyboard'), status=document.getElementById('status');
+    const modal=document.getElementById('modal'), modalTitle=document.getElementById('modalTitle'), modalText=document.getElementById('modalText'), modalAnswer=document.getElementById('modalAnswer');
+    const dayNumber=Math.floor(Date.now()/86400000);
+    function answerForDaily(){return WORDS[dayNumber%WORDS.length]}
+    let answer=answerForDaily();
+    const storageKey=()=>`evieWordGame:${new Date().toISOString().slice(0,10)}`;
+
+    function makeBoard(){board.innerHTML='';for(let r=0;r<rows;r++){const rr=document.createElement('div');rr.className='row';for(let c=0;c<cols;c++){const t=document.createElement('div');t.className='tile';t.id=`t-${r}-${c}`;rr.appendChild(t)}board.appendChild(rr)}}
+    function makeKeyboard(){const layout=['QWERTYUIOP','ASDFGHJKL','ZXCVBNM'];keyboard.innerHTML='';layout.forEach((line,i)=>{const rr=document.createElement('div');rr.className='key-row';if(i===2)rr.appendChild(keyButton('ENTER','wide'));[...line].forEach(ch=>rr.appendChild(keyButton(ch,'')));if(i===2)rr.appendChild(keyButton('⌫','wide'));keyboard.appendChild(rr)})}
+    function keyButton(label,cls){const b=document.createElement('button');b.type='button';b.className=`key ${cls}`;b.textContent=label;b.dataset.key=label;b.addEventListener('click',()=>handle(label));return b}
+    function showStatus(msg){status.textContent=msg;status.classList.remove('show');void status.offsetWidth;status.classList.add('show');setTimeout(()=>{if(status.textContent===msg)status.textContent=''},1800)}
+    function handle(key){if(finished)return;if(key==='ENTER')return submit();if(key==='⌫'||key==='BACKSPACE'){if(col>0){col--;guesses[row][col]='';paintTile(row,col)}return}if(/^[A-Z]$/.test(key)&&col<cols){guesses[row][col]=key;paintTile(row,col);col++}}
+    function paintTile(r,c){const t=document.getElementById(`t-${r}-${c}`);t.textContent=guesses[r][c];t.classList.toggle('filled',!!guesses[r][c])}
+    function scoreWord(word){const result=Array(5).fill('absent'), counts={};[...answer].forEach((ch,i)=>{if(word[i]===ch)result[i]='correct';else counts[ch]=(counts[ch]||0)+1});[...word].forEach((ch,i)=>{if(result[i]==='correct')return;if(counts[ch]>0){result[i]='present';counts[ch]--}});return result}
+    function paintKey(ch,state){const k=[...document.querySelectorAll('.key')].find(x=>x.dataset.key===ch);if(!k)return;const rank={absent:1,present:2,correct:3};const old=['absent','present','correct'].find(s=>k.classList.contains(s));if(!old||rank[state]>rank[old]){k.classList.remove('absent','present','correct');k.classList.add(state)}}
+    function submit(){if(col<5)return showStatus('Enter five letters');const word=guesses[row].join('');const result=scoreWord(word);result.forEach((s,i)=>{const t=document.getElementById(`t-${row}-${i}`);setTimeout(()=>{t.classList.remove('filled');t.classList.add('flip',s);paintKey(word[i],s)},i*150)});setTimeout(()=>{if(word===answer){finished=true;showEnd(true,row+1)}else if(row===5){finished=true;showEnd(false,6)}else{row++;col=0;save()}},900)}
+    function showEnd(win,attempts){save();setTimeout(()=>{modalTitle.textContent=win?'Brilliant! 🎉':'Better luck next time';modalText.textContent=win?`You solved today's word in ${attempts} ${attempts===1?'attempt':'attempts'}.`:`You used all six attempts.`;modalAnswer.textContent=answer;modal.classList.add('open')},250)}
+    function save(){if(!daily)return;localStorage.setItem(storageKey(),JSON.stringify({guesses,row,col,finished,answer}))}
+    function load(){if(!daily)return;try{const s=JSON.parse(localStorage.getItem(storageKey())||'null');if(!s||s.answer!==answer)return;guesses=s.guesses||guesses;row=s.row||0;col=s.col||0;finished=!!s.finished;for(let r=0;r<6;r++){for(let c=0;c<5;c++)paintTile(r,c);if(guesses[r].every(Boolean)){const word=guesses[r].join(''),res=scoreWord(word);res.forEach((st,i)=>{const t=document.getElementById(`t-${r}-${i}`);t.classList.remove('filled');t.classList.add(st);paintKey(word[i],st)})}}}catch(e){}}
+    function practice(){daily=false;answer=WORDS[Math.floor(Math.random()*WORDS.length)];row=0;col=0;guesses=Array.from({length:rows},()=>Array(cols).fill(''));finished=false;makeBoard();makeKeyboard();showStatus('Practice word ready')}
+    document.addEventListener('keydown',e=>{const k=e.key.toUpperCase();if(k==='ENTER')handle('ENTER');else if(k==='BACKSPACE')handle('BACKSPACE');else if(/^[A-Z]$/.test(k))handle(k)});
+    document.getElementById('newBtn').addEventListener('click',practice);
+    document.getElementById('helpBtn').addEventListener('click',()=>{modalTitle.textContent='How to play';modalText.textContent='Guess the five-letter word in six tries. After each guess the colours show how close you are. Green means correct letter and position, gold means the letter is in the word elsewhere, and grey means it is not in the word.';modalAnswer.textContent='';modal.classList.add('open')});
+    document.getElementById('modalClose').addEventListener('click',()=>modal.classList.remove('open'));modal.addEventListener('click',e=>{if(e.target===modal)modal.classList.remove('open')});
+    makeBoard();makeKeyboard();load();
+  })();
+  </script>
+</body>
+</html>
