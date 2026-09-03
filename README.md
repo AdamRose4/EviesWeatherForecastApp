@@ -1,4 +1,4 @@
-# Evie's Weather Forecasting App
+# Evie's Weather App
 
 A browser-based weather consensus app that compares six independent forecast-model feeds through Open-Meteo:
 

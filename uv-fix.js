@@ -1,4 +1,4 @@
-// UV presentation fix for Evie's Weather Forecasting App.
+// UV presentation fix for Evie's Weather App.
 // Uses Open-Meteo clear-sky UV potential for the hourly tiles and removes
 // the word "available" from rain vote labels.
 (function () {

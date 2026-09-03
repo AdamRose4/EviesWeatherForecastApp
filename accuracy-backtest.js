@@ -1,4 +1,4 @@
-// 14-day local model accuracy back-test for Evie's Weather Forecasting App.
+// 14-day local model accuracy back-test for Evie's Weather App.
 // Uses Open-Meteo Previous Runs API at a fixed 24-hour lead and compares it
 // with Open-Meteo's Historical Forecast series for the selected location.
 

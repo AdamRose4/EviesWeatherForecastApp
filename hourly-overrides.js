@@ -1,4 +1,4 @@
-// Hourly card presentation overrides for Evie's Weather Forecasting App.
+// Hourly card presentation overrides for Evie's Weather App.
 // The rain model count itself carries the colour signal to keep the tiles compact.
 
 renderHourlyCard = function(timeKey, label) {
