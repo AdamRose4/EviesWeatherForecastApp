@@ -3,22 +3,29 @@
 
 renderHourlyCard = function(timeKey, label) {
   const c = consensusAt(timeKey);
-  if (!c) return '';
-
-  const w = weatherCodes[c.code] || ['Weather','🌤️'];
   const extra = baseHourlyAt(timeKey);
-  const availabilityText = c.available === MODEL_DEFS.length
-    ? `${c.wetCount}/${c.available} rain`
-    : `${c.wetCount}/${c.available} available rain`;
-  const missingTitle = c.missing.length
-    ? `Missing for this hour: ${c.missing.join(', ')}`
-    : 'All 6 sources contributed';
+  if (!c && !Number.isFinite(extra.temperature)) return '';
+
+  const code = c?.code ?? extra.code;
+  const displayTemperature = c?.averageTemp ?? extra.temperature;
+  const w = weatherCodes[code] || ['Weather','🌤️'];
+  const availabilityText = c
+    ? (c.available === MODEL_DEFS.length
+      ? `${c.wetCount}/${c.available} rain`
+      : `${c.wetCount}/${c.available} available rain`)
+    : `${Number(extra.precipitation ?? 0).toFixed(1)} mm rain`;
+  const missingTitle = c
+    ? (c.missing.length
+      ? `Missing for this hour: ${c.missing.join(', ')}`
+      : 'All 6 sources contributed')
+    : 'Blended forecast; individual model comparison unavailable';
+  const likelihoodClass = c?.cls ?? ((extra.precipitation ?? 0) >= 0.1 ? 'medium' : 'low');
 
   return `<div class="hour-card" title="${missingTitle}">
     <div class="time">${label}</div>
     <div class="icon">${w[1]}</div>
-    <strong>${temp(c.averageTemp)}</strong>
-    <div class="model-vote ${c.cls}">${availabilityText}</div>
+    <strong>${temp(displayTemperature)}</strong>
+    <div class="model-vote ${likelihoodClass}">${availabilityText}</div>
     <div class="hour-extra nowrap">💨 Wind ${Number.isFinite(extra.wind) ? Math.round(extra.wind) + ' km/h' : '—'}</div>
     <div class="hour-extra nowrap">☀️ UV ${uvLabel(extra.uv)}</div>
   </div>`;
