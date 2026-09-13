@@ -6,14 +6,15 @@ const state = {
   longitude: -2.2382,
   location: 'Gloucester, United Kingdom',
   data: null,
-  models: []
+  models: [],
+  selectedDate: null
 };
 
 const MODEL_DEFS = [
   { key:'UKMO', org:'UK Met Office', model:'UKMO Seamless (UKV 2 km + Global)', api:'ukmo_seamless', days:7 },
-  { key:'ECMWF', org:'ECMWF', model:'IFS', api:'ecmwf_ifs025', days:8 },
+  { key:'ECMWF', org:'ECMWF', model:'IFS', api:'ecmwf_ifs025', days:14 },
   { key:'ICON', org:'Deutscher Wetterdienst (DWD)', model:'ICON Seamless', api:'icon_seamless', days:8 },
-  { key:'GFS', org:'NOAA / NCEP', model:'GFS Seamless', api:'ncep_gfs_seamless', days:8 },
+  { key:'GFS', org:'NOAA / NCEP', model:'GFS Seamless', api:'ncep_gfs_seamless', days:14 },
   { key:'ARPEGE', org:'Météo-France', model:'ARPEGE Europe', api:'meteofrance_arpege_europe', days:4 },
   { key:'KNMI', org:'KNMI', model:'HARMONIE-AROME Europe', api:'knmi_harmonie_arome_europe', days:3 }
 ];
@@ -58,7 +59,7 @@ async function reverseGeocode(lat, lon) {
 
 async function fetchBaseWeather(lat, lon) {
   const params = new URLSearchParams({
-    latitude: lat, longitude: lon, timezone: 'auto', forecast_days: 8,
+    latitude: lat, longitude: lon, timezone: 'auto', forecast_days: 14,
     current: 'temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m',
     hourly: 'temperature_2m,precipitation,weather_code,wind_speed_10m,uv_index',
     daily: 'weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,uv_index_max'
@@ -85,6 +86,7 @@ async function fetchModel(def, lat, lon) {
 }
 
 async function fetchWeather(lat, lon) {
+  closeHourlyDialog();
   setStatus('loading');
   $('weatherContent').classList.add('hidden');
   try {
@@ -145,7 +147,10 @@ function aggregateModelDay(model, dateKey) {
   const rows = model.data.hourly.time.map((t,i)=>({t,i})).filter(x=>x.t.startsWith(dateKey));
   if (!rows.length) return null;
   const temps = rows.map(x=>model.data.hourly.temperature_2m?.[x.i]).filter(Number.isFinite);
-  const rain = rows.reduce((s,x)=>s+(model.data.hourly.precipitation?.[x.i] ?? 0),0);
+  const precipitation = rows.map(x=>model.data.hourly.precipitation?.[x.i]).filter(Number.isFinite);
+  const codes = rows.map(x=>model.data.hourly.weather_code?.[x.i]).filter(Number.isFinite);
+  if (!temps.length && !precipitation.length && !codes.length) return null;
+  const rain = precipitation.reduce((sum,value)=>sum+value,0);
   const noon = rows.find(x=>x.t.endsWith('12:00')) || rows[Math.floor(rows.length/2)];
   return {
     model,
@@ -174,8 +179,11 @@ function dayConsensus(dateKey) {
 
 function baseHourlyAt(timeKey) {
   const i = state.data?.hourly?.time?.indexOf(timeKey) ?? -1;
-  if (i < 0) return { wind: null, uv: null };
+  if (i < 0) return { temperature: null, precipitation: null, code: null, wind: null, uv: null };
   return {
+    temperature: state.data.hourly.temperature_2m?.[i] ?? null,
+    precipitation: state.data.hourly.precipitation?.[i] ?? null,
+    code: state.data.hourly.weather_code?.[i] ?? null,
     wind: state.data.hourly.wind_speed_10m?.[i] ?? null,
     uv: state.data.hourly.uv_index?.[i] ?? null
   };
@@ -192,16 +200,23 @@ function uvLabel(value) {
 
 function renderHourlyCard(timeKey, label) {
   const c = consensusAt(timeKey);
-  if (!c) return '';
-  const w = weatherCodes[c.code] || ['Weather','🌤️'];
   const extra = baseHourlyAt(timeKey);
-  const availabilityText = c.available === MODEL_DEFS.length ? `${c.wetCount}/${c.available} rain` : `${c.wetCount}/${c.available} available rain`;
-  const missingTitle = c.missing.length ? `Missing for this hour: ${c.missing.join(', ')}` : 'All 6 sources contributed';
+  if (!c && !Number.isFinite(extra.temperature)) return '';
+  const code = c?.code ?? extra.code;
+  const displayTemperature = c?.averageTemp ?? extra.temperature;
+  const w = weatherCodes[code] || ['Weather','🌤️'];
+  const availabilityText = c
+    ? (c.available === MODEL_DEFS.length ? `${c.wetCount}/${c.available} rain` : `${c.wetCount}/${c.available} available rain`)
+    : `${Number(extra.precipitation ?? 0).toFixed(1)} mm rain`;
+  const missingTitle = c
+    ? (c.missing.length ? `Missing for this hour: ${c.missing.join(', ')}` : 'All 6 sources contributed')
+    : 'Blended forecast; individual model comparison unavailable';
+  const likelihoodClass = c?.cls ?? ((extra.precipitation ?? 0) >= 0.1 ? 'medium' : 'low');
   return `<div class="hour-card" title="${missingTitle}">
     <div class="time">${label}</div>
     <div class="icon">${w[1]}</div>
-    <strong>${temp(c.averageTemp)}</strong>
-    <div class="model-vote ${c.cls}">${availabilityText}</div>
+    <strong>${temp(displayTemperature)}</strong>
+    <div class="model-vote ${likelihoodClass}">${availabilityText}</div>
     <div class="hour-extra">💨 ${Number.isFinite(extra.wind) ? Math.round(extra.wind) + ' km/h' : '—'}</div>
     <div class="hour-extra">☀️ UV ${uvLabel(extra.uv)}</div>
   </div>`;
@@ -254,6 +269,7 @@ function render() {
   renderModelComparison(tomorrowKey);
   renderDaily();
   renderSourceIndex();
+  if (state.selectedDate && $('hourlyDayDialog').open) renderSelectedDay(state.selectedDate);
 }
 
 function renderModelComparison(dateKey) {
@@ -274,21 +290,46 @@ function renderModelComparison(dateKey) {
 }
 
 function renderDaily() {
-  const days = state.data.daily.time.slice(0,7);
+  const days = state.data.daily.time.slice(0,14);
   $('dailyForecast').innerHTML = days.map((dateKey,i) => {
     const c = dayConsensus(dateKey);
     const date = new Date(`${dateKey}T12:00:00`);
     const dayName = i===0 ? 'Today' : date.toLocaleDateString([], {weekday:'short'});
-    if (!c) return `<div class="day-row consensus-row"><div class="day">${dayName}</div><div>—</div><div class="desc">No model consensus</div><div>—</div><div class="temps">—</div></div>`;
+    const shortDate = date.toLocaleDateString([], {day:'numeric', month:'short'});
+    if (!c) return `<button type="button" class="day-row consensus-row day-forecast-button" data-date-key="${dateKey}" aria-label="View hourly forecast for ${dayName}, ${shortDate}"><div class="day"><span>${dayName}</span><small>${shortDate}</small></div><div>—</div><div class="desc">Blended forecast only</div><div>—</div><div class="temps">—</div></button>`;
     const [description, icon] = weatherCodes[c.code] || ['Weather','🌤️'];
-    return `<div class="day-row consensus-row">
-      <div class="day">${dayName}</div>
+    return `<button type="button" class="day-row consensus-row day-forecast-button" data-date-key="${dateKey}" aria-label="View hourly forecast for ${dayName}, ${shortDate}">
+      <div class="day"><span>${dayName}</span><small>${shortDate}</small></div>
       <div class="day-weather"><span>${icon}</span><small>${description}</small></div>
       <div class="desc">${c.wetPercent}% models rain · ${c.wetCount}/${c.available} sources</div>
       <div class="daily-confidence ${c.cls}"><i class="confidence-dot ${c.cls}"></i>${c.label}</div>
       <div class="temps">${temp(c.high)}<span>${temp(c.low)}</span></div>
-    </div>`;
+    </button>`;
   }).join('');
+}
+
+function renderSelectedDay(dateKey) {
+  const times = state.data?.hourly?.time?.filter(t => t.startsWith(dateKey)) || [];
+  if (!times.length) return;
+  state.selectedDate = dateKey;
+  const date = new Date(`${dateKey}T12:00:00`);
+  const c = dayConsensus(dateKey);
+  $('selectedDayDate').textContent = date.toLocaleDateString([], {weekday:'long', day:'numeric', month:'long'});
+  $('selectedDayLocation').textContent = state.location;
+  $('selectedDaySummary').textContent = c
+    ? `High ${temp(c.high)} · Low ${temp(c.low)} · ${c.wetPercent}% of ${c.available} available model${c.available === 1 ? '' : 's'} forecast rain`
+    : 'Hourly blended forecast';
+  $('selectedDayHourly').innerHTML = times.map(t => {
+    const dt = new Date(t);
+    return renderHourlyCard(t, dt.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}));
+  }).join('');
+  if (!$('hourlyDayDialog').open) $('hourlyDayDialog').showModal();
+}
+
+function closeHourlyDialog() {
+  const dialog = $('hourlyDayDialog');
+  if (dialog?.open) dialog.close();
+  state.selectedDate = null;
 }
 
 function renderSourceIndex() {
@@ -338,6 +379,17 @@ $('unitBtn').addEventListener('click', () => {
   state.unit = state.unit === 'C' ? 'F' : 'C';
   if (state.data) render();
 });
+
+$('dailyForecast').addEventListener('click', e => {
+  const button = e.target.closest('[data-date-key]');
+  if (button) renderSelectedDay(button.dataset.dateKey);
+});
+
+$('hourlyDayClose').addEventListener('click', closeHourlyDialog);
+$('hourlyDayDialog').addEventListener('click', e => {
+  if (e.target === $('hourlyDayDialog')) closeHourlyDialog();
+});
+$('hourlyDayDialog').addEventListener('close', () => { state.selectedDate = null; });
 
 document.addEventListener('click', e => {
   if (!e.target.closest('.search-panel')) $('searchResults').classList.add('hidden');

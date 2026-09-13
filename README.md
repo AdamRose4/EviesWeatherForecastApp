@@ -13,6 +13,8 @@ A browser-based weather consensus app that compares six independent forecast-mod
 
 The Next 24 Hours and Tomorrow Hour-by-Hour sections calculate each hour directly from the model feeds that have data for that timestamp.
 
+The 14-day forecast also opens into a full hourly view when any date is selected. Longer-range days use ECMWF and GFS, while shorter-range models contribute for as long as their published horizon allows.
+
 - Temperature = average of available model temperatures.
 - “% models rain” = the share of available models forecasting at least 0.1 mm precipitation in that hour.
 - Vote = shown as e.g. `4/6 rain` when all six contribute.
